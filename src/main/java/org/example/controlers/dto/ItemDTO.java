@@ -1,18 +1,18 @@
-package org.example.models;
+package org.example.controlers.dto;
 
 import java.util.List;
 import java.util.Objects;
 
-public class Item {
+public class ItemDTO {
     private int id;
     private String name;
     private int price;
-    private List<Order> orders;
+    private List<Integer> orders;
 
-    public Item() {
+    public ItemDTO() {
     }
 
-    public Item(int id, String name, int price, List<Order> orders) {
+    public ItemDTO(int id, String name, int price, List<Integer> orders) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -43,33 +43,24 @@ public class Item {
         this.price = price;
     }
 
-    public List<Order> getOrders() {
+    public List<Integer> getOrders() {
         return orders;
     }
 
-    public void setOrders(List<Order> orders) {
+    public void setOrders(List<Integer> orders) {
         this.orders = orders;
-    }
-
-    @Override
-    public String toString() {
-        return "Item{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", price=" + price +
-                '}';
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Item item = (Item) o;
-        return price == item.price && Objects.equals(name, item.name);
+        ItemDTO itemDTO = (ItemDTO) o;
+        return price == itemDTO.price && Objects.equals(name, itemDTO.name) && Objects.equals(orders, itemDTO.orders);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, price);
+        return Objects.hash(name, price, orders);
     }
 }
