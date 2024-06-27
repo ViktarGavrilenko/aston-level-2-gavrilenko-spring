@@ -7,7 +7,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -16,10 +18,10 @@ import javax.sql.DataSource;
 import java.util.Objects;
 
 @Configuration
-@ComponentScan("org.example.gavr")
+@ComponentScan(basePackages = "org.example")
 @EnableWebMvc
 @PropertySource("classpath:database.properties")
-@EnableTransactionManagement
+@EnableTransactionManagement(proxyTargetClass = true)
 public class SpringConfig implements WebMvcConfigurer {
     private final Environment environment;
 
@@ -41,5 +43,10 @@ public class SpringConfig implements WebMvcConfigurer {
     @Bean
     public JdbcTemplate jdbcTemplate() {
         return new JdbcTemplate(dataSource());
+    }
+
+    @Bean
+    public PlatformTransactionManager transactionManager() {
+        return new DataSourceTransactionManager(dataSource());
     }
 }

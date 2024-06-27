@@ -5,10 +5,12 @@ import org.example.models.Buyer;
 import org.example.models.Order;
 import org.example.repository.impl.OrderRepositoryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class BuyerDtoMapperImpl implements BuyerDtoMapper {
     OrderRepositoryImpl orderRepository;
 

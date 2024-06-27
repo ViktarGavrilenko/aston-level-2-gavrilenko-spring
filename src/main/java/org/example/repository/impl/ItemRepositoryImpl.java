@@ -6,14 +6,17 @@ import org.example.repository.ItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.example.repository.impl.BuyerRepositoryImpl.SELECT_ID_ITEMS_OF_ORDER_BY_ID_ORDER;
 import static org.example.repository.impl.OrderRepositoryImpl.INSERT_ORDER_ITEMS;
 
+@Repository
 public class ItemRepositoryImpl implements ItemRepository {
     public static final String SQL_QUERY_FAILED = "Sql query failed...";
 
@@ -21,7 +24,7 @@ public class ItemRepositoryImpl implements ItemRepository {
     public static final String ITEM_BY_NAME_AND_PRICE = "SELECT id, name, price FROM items where name=? and price=?";
     public static final String SELECT_ITEMS = "SELECT id, name, price FROM items";
     public static final String INSERT_ITEM = "INSERT INTO items(name, price) VALUES (?, ?)";
-    public static final String DELETE_ITEM_BY_ID = "DELETE FROM items where id = %s";
+    public static final String DELETE_ITEM_BY_ID = "DELETE FROM items where id = ?";
     public static final String DELETE_ITEM_FROM_ORDER_ITEMS = "DELETE FROM order_items WHERE id_item = ?";
     public static final String DELETE_ORDER_ITEMS = "DELETE FROM order_items WHERE id_order = ? and id_item=?";
     public static final String UPDATE_ITEM_BY_ID = "UPDATE items SET name=?, price=? where id =?";
@@ -37,7 +40,6 @@ public class ItemRepositoryImpl implements ItemRepository {
     public Item get(Integer id) {
         return jdbcTemplate.queryForObject(ITEM_BY_ID, new BeanPropertyRowMapper<>(Item.class), id);
     }
-
 
     @Override
     public List<Item> getAll() {
@@ -61,13 +63,12 @@ public class ItemRepositoryImpl implements ItemRepository {
         }
     }
 
-
     @Override
-    @Transactional
+    @Transactional("transactionManager")
     public void update(Item item) {
         jdbcTemplate.update(UPDATE_ITEM_BY_ID, item.getName(), item.getPrice(), item.getId());
         List<Order> newOrder = item.getOrders();
-        List<Order> oldOrder = get(item.getId()).getOrders();
+        List<Order> oldOrder = Optional.ofNullable(get(item.getId()).getOrders()).orElse(new ArrayList<>());
         List<Order> ordersForAdd = new ArrayList<>(newOrder);
         ordersForAdd.removeAll(oldOrder);
         List<Order> ordersForDelete = new ArrayList<>(oldOrder);
@@ -81,7 +82,7 @@ public class ItemRepositoryImpl implements ItemRepository {
     }
 
     @Override
-    @Transactional
+    @Transactional("transactionManager")
     public void delete(Integer id) {
         jdbcTemplate.update(DELETE_ITEM_FROM_ORDER_ITEMS, id);
         jdbcTemplate.update(DELETE_ITEM_BY_ID, id);

@@ -5,10 +5,12 @@ import org.example.models.Item;
 import org.example.models.Order;
 import org.example.repository.impl.ItemRepositoryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class OrderDtoMapperImpl implements OrderDtoMapper {
     ItemRepositoryImpl itemRepository;
 

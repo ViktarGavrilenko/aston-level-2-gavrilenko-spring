@@ -1,30 +1,37 @@
 package org.example.controlers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.controlers.dto.ItemDTO;
 import org.example.controlers.mapper.ItemDtoMapperImpl;
 import org.example.models.Item;
-import org.example.services.ItemService;
+import org.example.services.impl.ItemServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Controller
 @RequestMapping("/item")
 public class ItemController {
 
-    private final ItemService itemService;
+    private final ItemServiceImpl itemService;
     private ItemDtoMapperImpl dtoMapper;
+    private final ObjectMapper mapper;
 
     @Autowired
-    public ItemController(ItemService service, ItemDtoMapperImpl dtoMapper) {
-        this.itemService = service;
+    public ItemController(ItemServiceImpl itemService, ItemDtoMapperImpl dtoMapper) {
+        this.mapper = new ObjectMapper();
+        this.itemService = itemService;
         this.dtoMapper = dtoMapper;
     }
 
-    @GetMapping()
-    public ResponseEntity<ItemDTO> get(@RequestParam("id") int id) {
+    @GetMapping(value ="/{id}", produces = "application/json")
+    public ResponseEntity<ItemDTO> get(@PathVariable("id") int id) {
         Item item = itemService.get(id);
         ItemDTO itemDTO = null;
         if (item != null) {
@@ -33,24 +40,35 @@ public class ItemController {
         return new ResponseEntity<>(itemDTO, HttpStatus.OK);
     }
 
-    @PostMapping()
-    public ResponseEntity<?> save(@RequestBody ItemDTO itemDTO) {
+    @GetMapping(produces = "application/json")
+    public ResponseEntity<List<ItemDTO>> getAll() {
+        List<Item> items = itemService.getAll();
+        List<ItemDTO> itemDTOS = new ArrayList<>();
+        for (Item item : items) {
+            itemDTOS.add(dtoMapper.itemToItemDTO(item));
+        }
+        return new ResponseEntity<>(itemDTOS, HttpStatus.OK);
+    }
+
+    @PostMapping(consumes = "application/json")
+    public ResponseEntity<?> save(@RequestBody String json) throws JsonProcessingException {
+        ItemDTO itemDTO = mapper.readValue(json, ItemDTO.class);
         Item item = dtoMapper.itemDTOToItem(itemDTO);
         itemService.save(item);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-/*    @PutMapping
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String json = getTextFromInputStream(req.getInputStream());
-        ItemDTO dto = MAPPER.readValue(json, ItemDTO.class);
-        Item item = dtoMapper.itemDTOToItem(dto);
+    @PutMapping(consumes = "application/json")
+    protected ResponseEntity<?> doPut(@RequestBody String json) throws JsonProcessingException {
+        ItemDTO itemDTO = mapper.readValue(json, ItemDTO.class);
+        Item item = dtoMapper.itemDTOToItem(itemDTO);
         itemService.update(item);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping
-    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) {
-        int id = Integer.parseInt(req.getParameter("id"));
+    protected ResponseEntity<?> doDelete(@RequestParam("id") int id) {
         itemService.delete(id);
-    }*/
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

@@ -5,11 +5,14 @@ import org.example.models.Order;
 import org.example.repository.OrderRepository;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+@Repository
 public class OrderRepositoryImpl implements OrderRepository {
     public static final String ID_ORDERS = "SELECT id, number FROM orders";
     public static final String ORDER_BY_NUMBER = "SELECT id, number FROM orders where number=?";
@@ -41,7 +44,7 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
-    @Transactional
+    @Transactional("transactionManager")
     public Order save(Order order) {
         if (jdbcTemplate.update(INSERT_ORDER, order.getNumber()) == 1) {
             Order saveOrder = jdbcTemplate.queryForObject(ORDER_BY_NUMBER, new BeanPropertyRowMapper<>(Order.class), order.getNumber());
@@ -56,11 +59,11 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
-    @Transactional
+    @Transactional("transactionManager")
     public void update(Order order) {
         jdbcTemplate.update(UPDATE_ORDER_BY_ID, order.getNumber(), order.getId());
         List<Item> newItems = order.getItems();
-        List<Item> oldItem = get(order.getId()).getItems();
+        List<Item> oldItem = Optional.ofNullable(get(order.getId()).getItems()).orElse(new ArrayList<>());
         List<Item> listForAdd = new ArrayList<>(newItems);
         listForAdd.removeAll(oldItem);
         List<Item> listForDelete = new ArrayList<>(oldItem);
@@ -74,14 +77,14 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
-    @Transactional
+    @Transactional("transactionManager")
     public void delete(Integer id) {
         jdbcTemplate.update(DELETE_ORDER_FROM_ORDER_ITEMS, id);
         jdbcTemplate.update(DELETE_ORDER, id);
     }
 
     public List<Order> getListOfBuyerOrdersById(int idBuyer) {
-        List<Integer> idOrders = jdbcTemplate.query(BuyerRepositoryImpl.ORDERS_OF_BUYER, new BeanPropertyRowMapper<>(Integer.class),idBuyer);
+        List<Integer> idOrders = jdbcTemplate.query(BuyerRepositoryImpl.ORDERS_OF_BUYER, new BeanPropertyRowMapper<>(Integer.class), idBuyer);
         List<Order> orders = new ArrayList<>();
         for (int idOrder : idOrders) {
             Order order = get(idOrder);

@@ -7,12 +7,14 @@ import org.example.repository.BuyerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-
+@Repository
 public class BuyerRepositoryImpl implements BuyerRepository {
     public static final String SELECT_ALL_BUYERS = "SELECT id, name FROM buyers";
     public static final String SELECT_BUYERS = "SELECT id, name FROM buyers where id=?";
@@ -52,7 +54,7 @@ public class BuyerRepositoryImpl implements BuyerRepository {
     }
 
     @Override
-    @Transactional
+    @Transactional("transactionManager")
     public Buyer save(Buyer buyer) {
         if (jdbcTemplate.update(INSERT_BUYER, buyer.getName()) == 1) {
             Buyer saveBuyer = jdbcTemplate.queryForObject(BUYER_BY_NAME,
@@ -74,11 +76,11 @@ public class BuyerRepositoryImpl implements BuyerRepository {
     }
 
     @Override
-    @Transactional
+    @Transactional("transactionManager")
     public void update(Buyer buyer) {
         jdbcTemplate.update(UPDATE_BUYER_BY_ID, buyer.getName(), buyer.getId());
         List<Order> newOrder = buyer.getOrders();
-        List<Order> oldOrder = get(buyer.getId()).getOrders();
+        List<Order> oldOrder = Optional.ofNullable(get(buyer.getId()).getOrders()).orElse(new ArrayList<>());
         List<Order> listOrderForAdd = new ArrayList<>(newOrder);
         listOrderForAdd.removeAll(oldOrder);
         List<Order> listOrderForDelete = new ArrayList<>(oldOrder);
@@ -107,7 +109,7 @@ public class BuyerRepositoryImpl implements BuyerRepository {
     }
 
     @Override
-    @Transactional
+    @Transactional("transactionManager")
     public void delete(Integer id) {
         jdbcTemplate.update(DELETE_BUYER_BY_ID, id);
         List<Order> orderList = orderRepository.getListOfBuyerOrdersById(id);

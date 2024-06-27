@@ -5,10 +5,12 @@ import org.example.models.Item;
 import org.example.models.Order;
 import org.example.repository.impl.OrderRepositoryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class ItemDtoMapperImpl implements ItemDtoMapper {
     OrderRepositoryImpl orderRepository;
 
@@ -29,8 +31,10 @@ public class ItemDtoMapperImpl implements ItemDtoMapper {
     @Override
     public ItemDTO itemToItemDTO(Item item) {
         List<Integer> orders = new ArrayList<>();
-        for (Order order : item.getOrders()) {
-            orders.add(order.getId());
+        if (item.getOrders() != null) {
+            for (Order order : item.getOrders()) {
+                orders.add(order.getId());
+            }
         }
         return new ItemDTO(item.getId(), item.getName(), item.getPrice(), orders);
     }

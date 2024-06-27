@@ -10,7 +10,7 @@ import java.util.List;
 
 @Service
 public class OrderServiceImpl implements OrderService {
-    OrderRepositoryImpl repository;
+    private OrderRepositoryImpl repository;
 
     @Autowired
     public OrderServiceImpl(OrderRepositoryImpl repository) {
