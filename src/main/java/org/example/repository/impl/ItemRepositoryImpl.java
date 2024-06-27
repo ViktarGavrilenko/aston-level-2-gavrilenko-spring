@@ -35,7 +35,7 @@ public class ItemRepositoryImpl implements ItemRepository {
 
     @Override
     public Item get(Integer id) {
-        return jdbcTemplate.queryForObject(ITEM_BY_ID, new BeanPropertyRowMapper<>(Item.class), new Object[]{id});
+        return jdbcTemplate.queryForObject(ITEM_BY_ID, new BeanPropertyRowMapper<>(Item.class), id);
     }
 
 

@@ -4,6 +4,7 @@ import org.example.controlers.dto.OrderDTO;
 import org.example.models.Item;
 import org.example.models.Order;
 import org.example.repository.impl.ItemRepositoryImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +12,10 @@ import java.util.List;
 public class OrderDtoMapperImpl implements OrderDtoMapper {
     ItemRepositoryImpl itemRepository;
 
+    @Autowired
+    public OrderDtoMapperImpl(ItemRepositoryImpl itemRepository) {
+        this.itemRepository = itemRepository;
+    }
 
     @Override
     public Order orderDTOToOrder(OrderDTO orderDTO) {

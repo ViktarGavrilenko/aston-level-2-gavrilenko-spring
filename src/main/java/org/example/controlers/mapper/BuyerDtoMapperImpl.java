@@ -4,13 +4,18 @@ import org.example.controlers.dto.BuyerDTO;
 import org.example.models.Buyer;
 import org.example.models.Order;
 import org.example.repository.impl.OrderRepositoryImpl;
-
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class BuyerDtoMapperImpl implements BuyerDtoMapper {
-    OrderRepositoryImpl orderRepository = new OrderRepositoryImpl();
+    OrderRepositoryImpl orderRepository;
+
+    @Autowired
+    public BuyerDtoMapperImpl(OrderRepositoryImpl orderRepository) {
+        this.orderRepository = orderRepository;
+    }
 
     @Override
     public Buyer buyerDTOToBuyer(BuyerDTO buyerDTO) {
