@@ -31,8 +31,10 @@ public class OrderDtoMapperImpl implements OrderDtoMapper {
     @Override
     public OrderDTO orderToOrderDTO(Order order) {
         List<Integer> items = new ArrayList<>();
-        for (Item item : order.getItems()) {
-            items.add(item.getId());
+        if (order.getItems() != null) {
+            for (Item item : order.getItems()) {
+                items.add(item.getId());
+            }
         }
         return new OrderDTO(order.getId(), order.getNumber(), items);
     }

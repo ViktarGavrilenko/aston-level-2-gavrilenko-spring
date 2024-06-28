@@ -3,9 +3,13 @@ package org.example.repository.impl;
 import org.example.models.Item;
 import org.example.models.Order;
 import org.example.repository.ItemRepository;
+import org.example.repository.mapper.ItemResultSetMapper;
+import org.example.repository.mapper.ItemResultSetMapperWithOutOrder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.SingleColumnRowMapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,22 +34,23 @@ public class ItemRepositoryImpl implements ItemRepository {
     public static final String UPDATE_ITEM_BY_ID = "UPDATE items SET name=?, price=? where id =?";
 
     private final JdbcTemplate jdbcTemplate;
+    private final OrderRepositoryImpl orderRepository;
 
     @Autowired
-    public ItemRepositoryImpl(JdbcTemplate jdbcTemplate) {
+    public ItemRepositoryImpl(JdbcTemplate jdbcTemplate, @Lazy OrderRepositoryImpl orderRepository) {
         this.jdbcTemplate = jdbcTemplate;
+        this.orderRepository = orderRepository;
     }
 
     @Override
     public Item get(Integer id) {
-        return jdbcTemplate.queryForObject(ITEM_BY_ID, new BeanPropertyRowMapper<>(Item.class), id);
+        return jdbcTemplate.queryForObject(ITEM_BY_ID, new ItemResultSetMapper(orderRepository), id);
     }
 
     @Override
     public List<Item> getAll() {
-        return jdbcTemplate.query(SELECT_ITEMS, new BeanPropertyRowMapper<>(Item.class));
+        return jdbcTemplate.query(SELECT_ITEMS, new ItemResultSetMapper(orderRepository));
     }
-
 
     @Override
     public Item save(Item item) {
@@ -89,11 +94,11 @@ public class ItemRepositoryImpl implements ItemRepository {
     }
 
     public List<Item> getListItemsInOrderById(int idOrder) {
-        List<Integer> idItems = jdbcTemplate.query(SELECT_ID_ITEMS_OF_ORDER_BY_ID_ORDER, new Object[]{idOrder},
-                new BeanPropertyRowMapper<>(Integer.class));
+        List<Integer> idItems = jdbcTemplate.query(SELECT_ID_ITEMS_OF_ORDER_BY_ID_ORDER,
+                new SingleColumnRowMapper<>(Integer.class), idOrder);
         List<Item> items = new ArrayList<>();
         for (int idItem : idItems) {
-            Item item = jdbcTemplate.queryForObject(ITEM_BY_ID, new Object[]{idItem}, new BeanPropertyRowMapper<>(Item.class));
+            Item item = jdbcTemplate.queryForObject(ITEM_BY_ID, new ItemResultSetMapperWithOutOrder(orderRepository), idItem);
             items.add(item);
         }
         return items;

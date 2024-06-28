@@ -18,19 +18,17 @@ import java.util.List;
 @Controller
 @RequestMapping("/item")
 public class ItemController {
-
     private final ItemServiceImpl itemService;
-    private ItemDtoMapperImpl dtoMapper;
-    private final ObjectMapper mapper;
+    private final ItemDtoMapperImpl dtoMapper;
+    private final ObjectMapper mapper = new ObjectMapper();
 
     @Autowired
     public ItemController(ItemServiceImpl itemService, ItemDtoMapperImpl dtoMapper) {
-        this.mapper = new ObjectMapper();
         this.itemService = itemService;
         this.dtoMapper = dtoMapper;
     }
 
-    @GetMapping(value ="/{id}", produces = "application/json")
+    @GetMapping(value = "/{id}", produces = "application/json")
     public ResponseEntity<ItemDTO> get(@PathVariable("id") int id) {
         Item item = itemService.get(id);
         ItemDTO itemDTO = null;

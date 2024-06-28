@@ -3,8 +3,11 @@ package org.example.repository.impl;
 import org.example.models.Item;
 import org.example.models.Order;
 import org.example.repository.OrderRepository;
+import org.example.repository.mapper.OrderResultMapperWithOutItems;
+import org.example.repository.mapper.OrderResultSetMapper;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.SingleColumnRowMapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,7 +17,7 @@ import java.util.Optional;
 
 @Repository
 public class OrderRepositoryImpl implements OrderRepository {
-    public static final String ID_ORDERS = "SELECT id, number FROM orders";
+    public static final String SELECT_ALL_ORDERS = "SELECT id, number FROM orders";
     public static final String ORDER_BY_NUMBER = "SELECT id, number FROM orders where number=?";
     public static final String ORDER_BY_ID = "SELECT id, number FROM orders where id=?";
     public static final String INSERT_ORDER = "INSERT INTO orders (number) VALUES (?)";
@@ -28,19 +31,21 @@ public class OrderRepositoryImpl implements OrderRepository {
             "SELECT id_order FROM order_items WHERE id_item=?;";
 
     private final JdbcTemplate jdbcTemplate;
+    private final ItemRepositoryImpl itemRepository;
 
-    public OrderRepositoryImpl(JdbcTemplate jdbcTemplate) {
+    public OrderRepositoryImpl(JdbcTemplate jdbcTemplate, ItemRepositoryImpl itemRepository) {
         this.jdbcTemplate = jdbcTemplate;
+        this.itemRepository = itemRepository;
     }
 
     @Override
     public Order get(Integer id) {
-        return jdbcTemplate.queryForObject(ORDER_BY_ID, new BeanPropertyRowMapper<>(Order.class), id);
+        return jdbcTemplate.queryForObject(ORDER_BY_ID, new OrderResultSetMapper(itemRepository), id);
     }
 
     @Override
     public List<Order> getAll() {
-        return jdbcTemplate.query(ID_ORDERS, new BeanPropertyRowMapper<>(Order.class));
+        return jdbcTemplate.query(SELECT_ALL_ORDERS, new OrderResultSetMapper(itemRepository));
     }
 
     @Override
@@ -81,10 +86,11 @@ public class OrderRepositoryImpl implements OrderRepository {
     public void delete(Integer id) {
         jdbcTemplate.update(DELETE_ORDER_FROM_ORDER_ITEMS, id);
         jdbcTemplate.update(DELETE_ORDER, id);
+        jdbcTemplate.update(DELETE_BUYER_ORDER_BY_ID_ORDER, id);
     }
 
     public List<Order> getListOfBuyerOrdersById(int idBuyer) {
-        List<Integer> idOrders = jdbcTemplate.query(BuyerRepositoryImpl.ORDERS_OF_BUYER, new BeanPropertyRowMapper<>(Integer.class), idBuyer);
+        List<Integer> idOrders = jdbcTemplate.query(BuyerRepositoryImpl.ORDERS_OF_BUYER, new SingleColumnRowMapper<>(Integer.class), idBuyer);
         List<Order> orders = new ArrayList<>();
         for (int idOrder : idOrders) {
             Order order = get(idOrder);
@@ -97,13 +103,14 @@ public class OrderRepositoryImpl implements OrderRepository {
         return orders;
     }
 
-/*    public List<Order> getListOrderByIdItem(int idItem) {
-        List<Integer> idOrders = connectionProvider.getListFirstColumnInt(String.format(SELECT_ID_ORDERS_OF_ORDER_BY_ID_ITEM, idItem));
+    public List<Order> getListOrderByIdItem(int idItem) {
+        List<Integer> idOrders = jdbcTemplate.query(SELECT_ID_ORDERS_OF_ORDER_BY_ID_ITEM,
+                new SingleColumnRowMapper<>(Integer.class), idItem);
         List<Order> orders = new ArrayList<>();
         for (int idOrder : idOrders) {
-            Order order = orderResultSetMapper.mapWithOutItems(connectionProvider.sendSelectQuery(String.format(ORDER_BY_ID, idOrder)));
+            Order order = jdbcTemplate.queryForObject(ORDER_BY_ID, new OrderResultMapperWithOutItems(itemRepository), idOrder);
             orders.add(order);
         }
         return orders;
-    }*/
+    }
 }

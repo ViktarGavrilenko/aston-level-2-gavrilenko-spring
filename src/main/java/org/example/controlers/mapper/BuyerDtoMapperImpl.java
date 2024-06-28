@@ -31,8 +31,10 @@ public class BuyerDtoMapperImpl implements BuyerDtoMapper {
     @Override
     public BuyerDTO buyerToBuyerDTO(Buyer buyer) {
         List<Integer> orders = new ArrayList<>();
-        for (Order order : buyer.getOrders()) {
-            orders.add(order.getId());
+        if (buyer.getOrders() != null) {
+            for (Order order : buyer.getOrders()) {
+                orders.add(order.getId());
+            }
         }
         return new BuyerDTO(buyer.getId(), buyer.getName(), orders);
     }

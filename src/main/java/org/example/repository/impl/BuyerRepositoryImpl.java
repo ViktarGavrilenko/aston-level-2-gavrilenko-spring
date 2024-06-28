@@ -4,9 +4,12 @@ package org.example.repository.impl;
 import org.example.models.Buyer;
 import org.example.models.Order;
 import org.example.repository.BuyerRepository;
+import org.example.repository.mapper.BuyerResultSetMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.SingleColumnRowMapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,11 +31,10 @@ public class BuyerRepositoryImpl implements BuyerRepository {
     public static final String SELECT_ID_ITEMS_OF_ORDER_BY_ID_ORDER =
             "SELECT id_item FROM order_items WHERE id_order=?;";
     public static final String DELETE_BUYER_BY_ID = "DELETE FROM buyers WHERE id = ?;";
-    public static final String DELETE_ORDER_OF_BUYER_FROM_BUYER_ORDER = "DELETE FROM buyer_order WHERE id_buyer = %s;";
+    public static final String DELETE_ORDER_OF_BUYER_FROM_BUYER_ORDER = "DELETE FROM buyer_order WHERE id_buyer = ?;";
     public static final String DELETE_ORDER_OF_BUYER_FROM_BUYER_ORDER_BY_ID_ORDER =
             "DELETE FROM buyer_order WHERE id_order = ?;";
     public static final String UPDATE_BUYER_BY_ID = "UPDATE buyers SET name=? where id = ?";
-
 
     private final JdbcTemplate jdbcTemplate;
     private final OrderRepositoryImpl orderRepository;
@@ -45,12 +47,12 @@ public class BuyerRepositoryImpl implements BuyerRepository {
 
     @Override
     public Buyer get(Integer id) {
-        return jdbcTemplate.queryForObject(SELECT_BUYERS, new BeanPropertyRowMapper<>(Buyer.class), id);
+        return jdbcTemplate.queryForObject(SELECT_BUYERS, new BuyerResultSetMapper(orderRepository), id);
     }
 
     @Override
     public List<Buyer> getAll() {
-        return jdbcTemplate.query(SELECT_ALL_BUYERS, new BeanPropertyRowMapper<>(Buyer.class));
+        return jdbcTemplate.query(SELECT_ALL_BUYERS, new BuyerResultSetMapper(orderRepository));
     }
 
     @Override
@@ -98,8 +100,13 @@ public class BuyerRepositoryImpl implements BuyerRepository {
                 Order addOrder = orderRepository.save(order);
                 jdbcTemplate.update(INSERT_BUYER_ORDERS, buyer.getId(), addOrder.getId());
             } else {
-                Integer idBuyerOrder = jdbcTemplate.queryForObject(BUYER_ORDER_BY_ID_BUYER_AND_ID_ORDER,
-                        new BeanPropertyRowMapper<>(Integer.class), buyer.getId(), order.getId());
+                Integer idBuyerOrder = null;
+                try {
+                    idBuyerOrder = jdbcTemplate.queryForObject(BUYER_ORDER_BY_ID_BUYER_AND_ID_ORDER,
+                            new SingleColumnRowMapper<>(Integer.class), buyer.getId(), order.getId());
+                } catch (EmptyResultDataAccessException ex) {
+
+                }
                 if (idBuyerOrder == null) {
                     jdbcTemplate.update(INSERT_BUYER_ORDERS, buyer.getId(), order.getId());
                 }
