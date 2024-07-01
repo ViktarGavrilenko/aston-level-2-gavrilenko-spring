@@ -108,7 +108,7 @@ public class OrderRepositoryImpl implements OrderRepository {
                 new SingleColumnRowMapper<>(Integer.class), idItem);
         List<Order> orders = new ArrayList<>();
         for (int idOrder : idOrders) {
-            Order order = jdbcTemplate.queryForObject(ORDER_BY_ID, new OrderResultMapperWithOutItems(itemRepository), idOrder);
+            Order order = jdbcTemplate.queryForObject(ORDER_BY_ID, new OrderResultMapperWithOutItems(), idOrder);
             orders.add(order);
         }
         return orders;

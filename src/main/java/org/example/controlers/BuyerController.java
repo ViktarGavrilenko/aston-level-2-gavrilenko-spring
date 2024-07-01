@@ -57,7 +57,7 @@ public class BuyerController {
     }
 
     @PutMapping(consumes = "application/json")
-    protected ResponseEntity<?> doPut(@RequestBody String json) throws JsonProcessingException {
+    public ResponseEntity<?> doPut(@RequestBody String json) throws JsonProcessingException {
         BuyerDTO buyerDTO = mapper.readValue(json, BuyerDTO.class);
         Buyer buyer = dtoMapper.buyerDTOToBuyer(buyerDTO);
         buyerService.update(buyer);
@@ -65,7 +65,7 @@ public class BuyerController {
     }
 
     @DeleteMapping
-    protected ResponseEntity<?> doDelete(@RequestParam("id") int id) {
+    public ResponseEntity<?> doDelete(@RequestParam("id") int id) {
         buyerService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }

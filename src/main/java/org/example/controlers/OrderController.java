@@ -57,7 +57,7 @@ public class OrderController {
     }
 
     @PutMapping(consumes = "application/json")
-    protected ResponseEntity<?> doPut(@RequestBody String json) throws JsonProcessingException {
+    public ResponseEntity<?> doPut(@RequestBody String json) throws JsonProcessingException {
         OrderDTO orderDTO = mapper.readValue(json, OrderDTO.class);
         Order order = dtoMapper.orderDTOToOrder(orderDTO);
         orderService.update(order);
@@ -65,7 +65,7 @@ public class OrderController {
     }
 
     @DeleteMapping
-    protected ResponseEntity<?> doDelete(@RequestParam("id") int id) {
+    public ResponseEntity<?> doDelete(@RequestParam("id") int id) {
         orderService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }

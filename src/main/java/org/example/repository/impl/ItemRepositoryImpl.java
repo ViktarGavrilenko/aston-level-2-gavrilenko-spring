@@ -98,7 +98,7 @@ public class ItemRepositoryImpl implements ItemRepository {
                 new SingleColumnRowMapper<>(Integer.class), idOrder);
         List<Item> items = new ArrayList<>();
         for (int idItem : idItems) {
-            Item item = jdbcTemplate.queryForObject(ITEM_BY_ID, new ItemResultSetMapperWithOutOrder(orderRepository), idItem);
+            Item item = jdbcTemplate.queryForObject(ITEM_BY_ID, new ItemResultSetMapperWithOutOrder(), idItem);
             items.add(item);
         }
         return items;

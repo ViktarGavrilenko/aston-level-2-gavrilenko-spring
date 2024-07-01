@@ -57,7 +57,7 @@ public class ItemController {
     }
 
     @PutMapping(consumes = "application/json")
-    protected ResponseEntity<?> doPut(@RequestBody String json) throws JsonProcessingException {
+    public ResponseEntity<?> doPut(@RequestBody String json) throws JsonProcessingException {
         ItemDTO itemDTO = mapper.readValue(json, ItemDTO.class);
         Item item = dtoMapper.itemDTOToItem(itemDTO);
         itemService.update(item);
@@ -65,7 +65,7 @@ public class ItemController {
     }
 
     @DeleteMapping
-    protected ResponseEntity<?> doDelete(@RequestParam("id") int id) {
+    public ResponseEntity<?> doDelete(@RequestParam("id") int id) {
         itemService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
