@@ -23,7 +23,7 @@ class OrderDtoMapperImplTest {
     @Mock
     ItemRepositoryImpl itemRepository;
     @InjectMocks
-    OrderDtoMapperImpl dtoMapper;
+    OrderDtoMapper dtoMapper;
 
     private OrderDTO getOrderDTO() {
         return new OrderDTO(1, 1, List.of(1, 2, 3));

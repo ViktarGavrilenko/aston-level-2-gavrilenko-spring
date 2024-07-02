@@ -23,7 +23,7 @@ class ItemDtoMapperImplTest {
     @Mock
     OrderRepositoryImpl orderRepository;
     @InjectMocks
-    ItemDtoMapperImpl dtoMapper;
+    ItemDtoMapper dtoMapper;
 
     private ItemDTO getItemDTO() {
         return new ItemDTO(1, "name", 1, List.of(1, 2, 3));
@@ -52,5 +52,4 @@ class ItemDtoMapperImplTest {
     void itemToItemDTOTest() {
         assertEquals(dtoMapper.itemToItemDTO(getItem()), getItemDTO());
     }
-
 }

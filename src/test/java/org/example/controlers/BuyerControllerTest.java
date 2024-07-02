@@ -1,7 +1,7 @@
 package org.example.controlers;
 
 import org.example.controlers.dto.BuyerDTO;
-import org.example.controlers.mapper.BuyerDtoMapperImpl;
+import org.example.controlers.mapper.BuyerDtoMapper;
 import org.example.models.Buyer;
 import org.example.models.Order;
 import org.example.services.impl.BuyerServiceImpl;
@@ -47,7 +47,7 @@ class BuyerControllerTest {
     private BuyerServiceImpl buyerService;
 
     @Mock
-    private BuyerDtoMapperImpl dtoMapper;
+    private BuyerDtoMapper dtoMapper;
 
     /*    @GetMapping(value = "/{id}", produces = "application/json")
     public ResponseEntity<BuyerDTO> get(@PathVariable("id") int id) {

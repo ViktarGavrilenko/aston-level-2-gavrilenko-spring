@@ -3,27 +3,26 @@ package org.example.controlers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.controlers.dto.OrderDTO;
-import org.example.controlers.mapper.OrderDtoMapperImpl;
+import org.example.controlers.mapper.OrderDtoMapper;
 import org.example.models.Order;
 import org.example.services.impl.OrderServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/order")
 public class OrderController {
     private final OrderServiceImpl orderService;
-    private final OrderDtoMapperImpl dtoMapper;
+    private final OrderDtoMapper dtoMapper;
     private final ObjectMapper mapper = new ObjectMapper();
 
     @Autowired
-    public OrderController(OrderServiceImpl orderService, OrderDtoMapperImpl dtoMapper) {
+    public OrderController(OrderServiceImpl orderService, OrderDtoMapper dtoMapper) {
         this.orderService = orderService;
         this.dtoMapper = dtoMapper;
     }

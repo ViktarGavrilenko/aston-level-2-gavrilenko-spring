@@ -3,27 +3,27 @@ package org.example.controlers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.controlers.dto.BuyerDTO;
-import org.example.controlers.mapper.BuyerDtoMapperImpl;
+import org.example.controlers.mapper.BuyerDtoMapper;
 import org.example.models.Buyer;
 import org.example.services.impl.BuyerServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/buyer")
+
 public class BuyerController {
     private final BuyerServiceImpl buyerService;
-    private final BuyerDtoMapperImpl dtoMapper;
+    private final BuyerDtoMapper dtoMapper;
     private final ObjectMapper mapper = new ObjectMapper();
 
     @Autowired
-    public BuyerController(BuyerServiceImpl buyerService, BuyerDtoMapperImpl dtoMapper) {
+    public BuyerController(BuyerServiceImpl buyerService, BuyerDtoMapper dtoMapper) {
         this.buyerService = buyerService;
         this.dtoMapper = dtoMapper;
     }

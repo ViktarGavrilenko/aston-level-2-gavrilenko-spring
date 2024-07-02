@@ -24,7 +24,7 @@ class BuyerDtoMapperImplTest {
     OrderRepositoryImpl orderRepository;
 
     @InjectMocks
-    BuyerDtoMapperImpl dtoMapper;
+    BuyerDtoMapper dtoMapper;
 
     private BuyerDTO getBuyerDTO() {
         return new BuyerDTO(1, "name", List.of(1, 2, 3));
