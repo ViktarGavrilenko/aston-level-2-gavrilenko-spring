@@ -1,0 +1,8 @@
+{
+  "id": 0,
+  "name": "SomeItem",
+  "price": 1,
+  "orders": [
+    1
+  ]
+}

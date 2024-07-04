@@ -48,8 +48,10 @@ public class MappingUtil {
     @Named("getItemsById")
     public List<Item> getItemsById(List<Integer> itemDTO) {
         List<Item> items = new ArrayList<>();
-        for (int item : itemDTO) {
-            items.add(itemRepository.get(item));
+        if (itemDTO != null) {
+            for (int item : itemDTO) {
+                items.add(itemRepository.get(item));
+            }
         }
         return items;
     }

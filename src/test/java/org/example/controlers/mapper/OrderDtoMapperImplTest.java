@@ -1,29 +1,29 @@
 package org.example.controlers.mapper;
 
 import org.example.controlers.dto.OrderDTO;
+import org.example.controlers.mapper.util.MappingUtil;
 import org.example.models.Item;
 import org.example.models.Order;
-import org.example.repository.impl.ItemRepositoryImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class OrderDtoMapperImplTest {
 
     @Mock
-    ItemRepositoryImpl itemRepository;
+    private MappingUtil mappingUtil;
     @InjectMocks
-    OrderDtoMapper dtoMapper;
+    private OrderDtoMapperImpl dtoMapper;
 
     private OrderDTO getOrderDTO() {
         return new OrderDTO(1, 1, List.of(1, 2, 3));
@@ -40,16 +40,13 @@ class OrderDtoMapperImplTest {
 
     @Test
     void orderDTOToOrderTest() {
-        Mockito.doAnswer(i -> {
-            int number = i.getArgument(0);
-            List<Order> orders = new ArrayList<>();
-            return new Item(number, "name" + number, number * 2, orders);
-        }).when(itemRepository).get(anyInt());
+        when(mappingUtil.getItemsById(anyList())).thenReturn(getOrder().getItems());
         assertEquals(dtoMapper.orderDTOToOrder(getOrderDTO()), getOrder());
     }
 
     @Test
     void orderToOrderDTOTest() {
+        when(mappingUtil.getIdItems(anyList())).thenReturn(getOrderDTO().getItems());
         assertEquals(dtoMapper.orderToOrderDTO(getOrder()), getOrderDTO());
     }
 }
