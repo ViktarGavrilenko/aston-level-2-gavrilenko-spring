@@ -9,7 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class BuyerResultSetMapper implements RowMapper<Buyer> {
-    private static OrderRepositoryImpl orderRepository;
+    private final OrderRepositoryImpl orderRepository;
 
     @Autowired
     public BuyerResultSetMapper(OrderRepositoryImpl orderRepository) {
