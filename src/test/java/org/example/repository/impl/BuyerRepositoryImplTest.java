@@ -1,57 +1,32 @@
 package org.example.repository.impl;
 
-import org.example.config.SpringConfig;
 import org.example.models.Buyer;
-import org.junit.BeforeClass;
+import org.example.repository.TestConfig;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
-import org.testcontainers.containers.MySQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import static org.example.controlers.BuyerControllerTest.buyerList;
 import static org.example.controlers.BuyerControllerTest.getTemplateBuyer;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
-@PropertySource("classpath:database.properties")
-@Testcontainers
-/*@ExtendWith(SpringExtension.class)*/
-@ContextConfiguration(classes = {SpringConfig.class})
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = {TestConfig.class})
 @WebAppConfiguration
-class BuyerRepositoryImplTest {
-
+class BuyerRepositoryImplTest extends BaseTest {
     private final BuyerRepositoryImpl buyerRepository;
 
-    @Value("${database.properties.bdName}")
-    private static String dbName="task2_aston";
-    @Value("${database.properties.bdUser}")
-    private static String dbUser="root";
-    @Value("${database.properties.bdPass}")
-    private static String bdPass="";
-
-    @Container
-    private static final MySQLContainer<?> mySQLContainer = new MySQLContainer<>(
-            "mysql:8"
-    ).withDatabaseName(dbName)
-            .withUsername(dbUser)
-            .withPassword(bdPass)
-            .withInitScript("schema.sql");
-
     @Autowired
-    public BuyerRepositoryImplTest(BuyerRepositoryImpl buyerRepository) {
+    public BuyerRepositoryImplTest(BuyerRepositoryImpl buyerRepository, JdbcTemplate jdbcTemplate) {
+        super(jdbcTemplate);
         this.buyerRepository = buyerRepository;
-    }
-
-    @BeforeClass
-    public static void beforeAll() {
-        mySQLContainer.start();
     }
 
     @Test
@@ -73,17 +48,38 @@ class BuyerRepositoryImplTest {
 
     @Test
     void getAll() {
+        int size = 5;
+        List<Buyer> buyers = buyerList(size);
+        List<Buyer> saveBuyers = new ArrayList<>();
+        for (Buyer buyer : buyers) {
+            Buyer saveBuyer = buyerRepository.save(buyer);
+            saveBuyers.add(saveBuyer);
+        }
+        List<Buyer> getAllBuyers = buyerRepository.getAll();
+        assertTrue(getAllBuyers.equals(buyers));
     }
 
     @Test
     void save() {
+        Buyer saveBuyer = buyerRepository.save(getTemplateBuyer(1));
+        Buyer getBuyer = buyerRepository.get(saveBuyer.getId());
+        assertEquals(getBuyer, getTemplateBuyer(1));
     }
 
     @Test
     void update() {
+        Buyer saveBuyer = buyerRepository.save(getTemplateBuyer(1));
+        saveBuyer.setName("NewName");
+        buyerRepository.update(saveBuyer);
+        Buyer getUpdateBuyer = buyerRepository.get(saveBuyer.getId());
+        assertEquals(getUpdateBuyer, saveBuyer);
     }
 
     @Test
     void delete() {
+        Buyer saveBuyer = buyerRepository.save(getTemplateBuyer(1));
+        assertEquals(buyerRepository.get(saveBuyer.getId()), saveBuyer);
+        buyerRepository.delete(saveBuyer.getId());
+        assertNull(buyerRepository.get(saveBuyer.getId()));
     }
 }

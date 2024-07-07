@@ -42,7 +42,7 @@ public class BuyerControllerTest {
 
     public static List<Buyer> buyerList(int size) {
         List<Buyer> buyerList = new ArrayList<>();
-        for (int i = 0; i < size; i++) {
+        for (int i = 1; i <= size; i++) {
             buyerList.add(getTemplateBuyer(i));
         }
         return buyerList;

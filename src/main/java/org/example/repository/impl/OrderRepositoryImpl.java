@@ -5,6 +5,7 @@ import org.example.models.Order;
 import org.example.repository.OrderRepository;
 import org.example.repository.mapper.OrderResultMapperWithOutItems;
 import org.example.repository.mapper.OrderResultSetMapper;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.SingleColumnRowMapper;
@@ -40,7 +41,11 @@ public class OrderRepositoryImpl implements OrderRepository {
 
     @Override
     public Order get(Integer id) {
-        return jdbcTemplate.queryForObject(ORDER_BY_ID, new OrderResultSetMapper(itemRepository), id);
+        try {
+            return jdbcTemplate.queryForObject(ORDER_BY_ID, new OrderResultSetMapper(itemRepository), id);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
     @Override
@@ -57,6 +62,7 @@ public class OrderRepositoryImpl implements OrderRepository {
             for (Item item : items) {
                 jdbcTemplate.update(INSERT_ORDER_ITEMS, saveOrder.getId(), item.getId());
             }
+            saveOrder.setItems(items);
             return saveOrder;
         } else {
             throw new IllegalArgumentException(ItemRepositoryImpl.SQL_QUERY_FAILED);

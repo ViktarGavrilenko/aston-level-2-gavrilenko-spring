@@ -47,7 +47,11 @@ public class BuyerRepositoryImpl implements BuyerRepository {
 
     @Override
     public Buyer get(Integer id) {
-        return jdbcTemplate.queryForObject(SELECT_BUYERS, new BuyerResultSetMapper(orderRepository), id);
+        try {
+            return jdbcTemplate.queryForObject(SELECT_BUYERS, new BuyerResultSetMapper(orderRepository), id);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
     @Override
@@ -63,14 +67,19 @@ public class BuyerRepositoryImpl implements BuyerRepository {
                     new BeanPropertyRowMapper<>(Buyer.class), buyer.getName());
 
             List<Order> orders = buyer.getOrders();
+            List<Order> saveOrders = new ArrayList<>();
             for (Order order : orders) {
                 if (orderRepository.get(order.getId()) == null) {
                     Order saveOrder = orderRepository.save(order);
                     jdbcTemplate.update(INSERT_BUYER_ORDERS, saveBuyer.getId(), saveOrder.getId());
+                    saveOrders.add(saveOrder);
                 } else {
+                    orderRepository.update(order);
                     jdbcTemplate.update(INSERT_BUYER_ORDERS, saveBuyer.getId(), order.getId());
+                    saveOrders.add(order);
                 }
             }
+            saveBuyer.setOrders(saveOrders);
             return saveBuyer;
         } else {
             throw new IllegalArgumentException(ItemRepositoryImpl.SQL_QUERY_FAILED);

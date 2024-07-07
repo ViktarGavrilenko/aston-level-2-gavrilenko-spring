@@ -7,6 +7,7 @@ import org.example.repository.mapper.ItemResultSetMapper;
 import org.example.repository.mapper.ItemResultSetMapperWithOutOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.SingleColumnRowMapper;
@@ -44,7 +45,11 @@ public class ItemRepositoryImpl implements ItemRepository {
 
     @Override
     public Item get(Integer id) {
-        return jdbcTemplate.queryForObject(ITEM_BY_ID, new ItemResultSetMapper(orderRepository), id);
+        try {
+            return jdbcTemplate.queryForObject(ITEM_BY_ID, new ItemResultSetMapper(orderRepository), id);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
     @Override
