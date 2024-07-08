@@ -61,7 +61,6 @@ public class OrderRepositoryImpl implements OrderRepository {
             Order saveOrder = jdbcTemplate.queryForObject(ORDER_BY_NUMBER, new BeanPropertyRowMapper<>(Order.class), order.getNumber());
             List<Item> items = order.getItems();
             for (Item item : items) {
-                jdbcTemplate.update(INSERT_ORDER_ITEMS, saveOrder.getId(), item.getId());
                 if (itemRepository.get(item.getId()) != null) {
                     jdbcTemplate.update(INSERT_ORDER_ITEMS, saveOrder.getId(), item.getId());
                 } else {

@@ -7,7 +7,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class BuyerDTOTest {
+class BuyerDTOTest {
     private final int id = 1;
     private final String name = "someName";
 

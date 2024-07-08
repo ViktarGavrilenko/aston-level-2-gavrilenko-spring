@@ -14,7 +14,7 @@ class ItemDTOTest {
     public List<Integer> orders = getTempListInteger();
 
     @Test
-    public void getId() {
+    void getId() {
         ItemDTO item = new ItemDTO(id, name, price, orders);
         assertEquals(id, item.getId());
     }

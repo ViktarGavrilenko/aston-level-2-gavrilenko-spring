@@ -14,7 +14,7 @@ class ItemTest {
     public List<Order> orders = getTempOrders();
 
     @Test
-    public void getId() {
+    void getId() {
         Item item = new Item(id, name, price, orders);
         assertEquals(id, item.getId());
     }

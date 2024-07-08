@@ -36,6 +36,7 @@ public class BuyerRepositoryImpl implements BuyerRepository {
             "DELETE FROM buyer_order WHERE id_order = ?;";
     public static final String UPDATE_BUYER_BY_ID = "UPDATE buyers SET name=? where id = ?";
     public static final String INVALID_ORDER_ID = "Invalid order id";
+    public static final String INVALID_ID = "Invalid id";
 
     private final JdbcTemplate jdbcTemplate;
     private final OrderRepositoryImpl orderRepository;
@@ -109,7 +110,7 @@ public class BuyerRepositoryImpl implements BuyerRepository {
                     idBuyerOrder = jdbcTemplate.queryForObject(BUYER_ORDER_BY_ID_BUYER_AND_ID_ORDER,
                             new SingleColumnRowMapper<>(Integer.class), buyer.getId(), order.getId());
                 } catch (EmptyResultDataAccessException ex) {
-
+                    throw new IllegalArgumentException(INVALID_ID);
                 }
                 if (idBuyerOrder == null) {
                     jdbcTemplate.update(INSERT_BUYER_ORDERS, buyer.getId(), order.getId());

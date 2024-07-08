@@ -1,5 +1,6 @@
 package org.example.repository.impl;
 
+import org.example.models.Buyer;
 import org.example.models.Item;
 import org.example.models.Order;
 import org.example.repository.TestConfig;
@@ -11,8 +12,10 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import static org.example.controlers.BuyerControllerTest.getTemplateBuyer;
 import static org.example.controlers.ItemControllerTest.getItemList;
 import static org.example.controlers.ItemControllerTest.getTemplateItem;
 import static org.example.controlers.OrderControllerTest.getTemplateOrder;
@@ -77,9 +80,16 @@ class ItemRepositoryImplTest extends BaseTest {
 
     @Test
     void getListItemsInOrderById() {
-        Order saveOrder = orderRepository.save(getTemplateOrder(1));
+        Order order = getTemplateOrder(1);
+        List<Item> items = new ArrayList<>();
+        for (Item item: order.getItems()){
+            Item saveItem = itemRepository.save(item);
+            items.add(saveItem);
+        }
+        order.setItems(items);
+        Order saveOrder = orderRepository.save(order);
         List<Item> itemListActual = getTemplateOrder(1).getItems();
         List<Item> itemListExpected = itemRepository.getListItemsInOrderById(saveOrder.getId());
         assertEquals(itemListExpected, itemListActual);
-    }
+     }
 }

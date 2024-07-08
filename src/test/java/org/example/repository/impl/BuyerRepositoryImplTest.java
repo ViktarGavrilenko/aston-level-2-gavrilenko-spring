@@ -78,9 +78,12 @@ class BuyerRepositoryImplTest extends BaseTest {
 
     private Buyer saveBuyer(Buyer buyer) {
         List<Order> orders = buyer.getOrders();
+        List<Order> saveOrders = new ArrayList<>();
         for (Order order : orders) {
-            orderRepository.save(order);
+            Order saveOrder = orderRepository.save(order);
+            saveOrders.add(saveOrder);
         }
+        buyer.setOrders(saveOrders);
         return buyerRepository.save(buyer);
     }
 }

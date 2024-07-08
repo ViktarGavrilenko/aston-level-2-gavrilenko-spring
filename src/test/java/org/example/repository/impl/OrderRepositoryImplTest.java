@@ -85,9 +85,12 @@ class OrderRepositoryImplTest extends BaseTest {
     void getListOfBuyerOrdersById() {
         Buyer buyer = getTemplateBuyer(1);
         List<Order> orders = buyer.getOrders();
+        List<Order> saveOrders = new ArrayList<>();
         for (Order order : orders) {
-            orderRepository.save(order);
+            Order saveOrder = orderRepository.save(order);
+            saveOrders.add(saveOrder);
         }
+        buyer.setOrders(saveOrders);
         Buyer saveBuyer = buyerRepository.save(buyer);
         List<Order> orderListActual = getTemplateBuyer(1).getOrders();
         List<Order> orderListExpected = orderRepository.getListOfBuyerOrdersById(saveBuyer.getId());
@@ -100,20 +103,24 @@ class OrderRepositoryImplTest extends BaseTest {
         Item item = getTemplateItem(1);
         List<Order> orderList = new ArrayList<>();
         for (int i = 1; i <= size; i++) {
-            orderList.add(new Order(i, i, new ArrayList<>()));
+            Order saveOrder = orderRepository.save(new Order(i, i, new ArrayList<>()));
+            orderList.add(saveOrder);
         }
         item.setOrders(orderList);
         Item saveItem = itemRepository.save(item);
-        List<Order> orderListActual = getTemplateItem(1).getOrders();
+        List<Order> orderListActual = item.getOrders();
         List<Order> orderListExpected = orderRepository.getListOrderByIdItem(saveItem.getId());
         assertEquals(orderListExpected, orderListActual);
     }
 
     private Order saveOrder(Order order) {
         List<Item> items = order.getItems();
+        List<Item> saveItems = new ArrayList<>();
         for (Item item : items) {
-            itemRepository.save(item);
+            Item saveItem = itemRepository.save(item);
+            saveItems.add(saveItem);
         }
+        order.setItems(saveItems);
         return orderRepository.save(order);
     }
 }
