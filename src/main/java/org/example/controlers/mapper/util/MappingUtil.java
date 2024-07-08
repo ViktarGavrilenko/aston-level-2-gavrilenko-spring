@@ -11,6 +11,9 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.example.repository.impl.BuyerRepositoryImpl.INVALID_ORDER_ID;
+import static org.example.repository.impl.OrderRepositoryImpl.INVALID_ITEM_ID;
+
 @Named("MappingUtil")
 @Component
 public class MappingUtil {
@@ -39,18 +42,28 @@ public class MappingUtil {
         List<Order> orders = new ArrayList<>();
         if (idOrders != null) {
             for (int id : idOrders) {
-                orders.add(orderRepository.get(id));
+                Order order = orderRepository.get(id);
+                if (order != null) {
+                    orders.add(order);
+                } else {
+                    throw new IllegalArgumentException(INVALID_ORDER_ID);
+                }
             }
         }
         return orders;
     }
 
     @Named("getItemsById")
-    public List<Item> getItemsById(List<Integer> itemDTO) {
+    public List<Item> getItemsById(List<Integer> idItems) {
         List<Item> items = new ArrayList<>();
-        if (itemDTO != null) {
-            for (int item : itemDTO) {
-                items.add(itemRepository.get(item));
+        if (idItems != null) {
+            for (int id : idItems) {
+                Item item = itemRepository.get(id);
+                if (item != null) {
+                    items.add(item);
+                } else {
+                    throw new IllegalArgumentException(INVALID_ITEM_ID);
+                }
             }
         }
         return items;

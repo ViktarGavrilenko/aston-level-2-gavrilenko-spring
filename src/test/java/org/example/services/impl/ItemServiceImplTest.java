@@ -13,7 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 
 import static org.example.controlers.ItemControllerTest.getTemplateItem;
-import static org.example.controlers.ItemControllerTest.itemList;
+import static org.example.controlers.ItemControllerTest.getItemList;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -25,9 +25,9 @@ class ItemServiceImplTest {
 
     @Test
     void getAll() {
-        when(itemRepository.getAll()).thenReturn(itemList(5));
+        when(itemRepository.getAll()).thenReturn(getItemList(5));
         List<Item> getAllItem = itemService.getAll();
-        Assertions.assertEquals(getAllItem, itemList(5));
+        Assertions.assertEquals(getAllItem, getItemList(5));
     }
 
     @Test

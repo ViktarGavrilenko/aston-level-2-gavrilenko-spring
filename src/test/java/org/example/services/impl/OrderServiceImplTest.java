@@ -13,7 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 
 import static org.example.controlers.OrderControllerTest.getTemplateOrder;
-import static org.example.controlers.OrderControllerTest.orderList;
+import static org.example.controlers.OrderControllerTest.getOrderList;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -25,9 +25,9 @@ class OrderServiceImplTest {
 
     @Test
     void getAll() {
-        when(orderRepository.getAll()).thenReturn(orderList(5));
+        when(orderRepository.getAll()).thenReturn(getOrderList(5));
         List<Order> getAllOrders = orderService.getAll();
-        Assertions.assertEquals(getAllOrders, orderList(5));
+        Assertions.assertEquals(getAllOrders, getOrderList(5));
     }
 
     @Test

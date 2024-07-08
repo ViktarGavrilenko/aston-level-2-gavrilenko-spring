@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.example.repository.impl.BuyerRepositoryImpl.INVALID_ORDER_ID;
 import static org.example.repository.impl.BuyerRepositoryImpl.SELECT_ID_ITEMS_OF_ORDER_BY_ID_ORDER;
 import static org.example.repository.impl.OrderRepositoryImpl.INSERT_ORDER_ITEMS;
 
@@ -65,8 +66,13 @@ public class ItemRepositoryImpl implements ItemRepository {
 
             List<Order> orders = item.getOrders();
             for (Order order : orders) {
-                jdbcTemplate.update(INSERT_ORDER_ITEMS, order.getId(), saveItem.getId());
+                if (orderRepository.get(order.getId()) != null) {
+                    jdbcTemplate.update(INSERT_ORDER_ITEMS, order.getId(), saveItem.getId());
+                } else {
+                    throw new IllegalArgumentException(INVALID_ORDER_ID);
+                }
             }
+            saveItem.setOrders(orders);
             return saveItem;
         } else {
             throw new IllegalArgumentException(SQL_QUERY_FAILED);

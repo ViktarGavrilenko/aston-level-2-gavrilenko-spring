@@ -30,6 +30,7 @@ public class OrderRepositoryImpl implements OrderRepository {
     public static final String DELETE_BUYER_ORDER_BY_ID_ORDER = "DELETE FROM buyer_order WHERE id_order = ?";
     public static final String SELECT_ID_ORDERS_OF_ORDER_BY_ID_ITEM =
             "SELECT id_order FROM order_items WHERE id_item=?;";
+    public static final String INVALID_ITEM_ID = "Invalid item id";
 
     private final JdbcTemplate jdbcTemplate;
     private final ItemRepositoryImpl itemRepository;
@@ -61,6 +62,11 @@ public class OrderRepositoryImpl implements OrderRepository {
             List<Item> items = order.getItems();
             for (Item item : items) {
                 jdbcTemplate.update(INSERT_ORDER_ITEMS, saveOrder.getId(), item.getId());
+                if (itemRepository.get(item.getId()) != null) {
+                    jdbcTemplate.update(INSERT_ORDER_ITEMS, saveOrder.getId(), item.getId());
+                } else {
+                    throw new IllegalArgumentException(INVALID_ITEM_ID);
+                }
             }
             saveOrder.setItems(items);
             return saveOrder;

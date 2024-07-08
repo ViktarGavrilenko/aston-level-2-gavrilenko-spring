@@ -40,7 +40,7 @@ public class OrderControllerTest {
         return new Order(id, id, items);
     }
 
-    public static List<Order> orderList(int size) {
+    public static List<Order> getOrderList(int size) {
         List<Order> orderList = new ArrayList<>();
         for (int i = 0; i < size; i++) {
             orderList.add(getTemplateOrder(i));
@@ -72,7 +72,7 @@ public class OrderControllerTest {
     void getAll() {
         int size = 3;
         List<OrderDTO> itemDTOS = orderDTOList(size);
-        when(orderService.getAll()).thenReturn(orderList(size));
+        when(orderService.getAll()).thenReturn(getOrderList(size));
 
         doAnswer(invocation -> {
             Order order = invocation.getArgument(0);

@@ -35,6 +35,7 @@ public class BuyerRepositoryImpl implements BuyerRepository {
     public static final String DELETE_ORDER_OF_BUYER_FROM_BUYER_ORDER_BY_ID_ORDER =
             "DELETE FROM buyer_order WHERE id_order = ?;";
     public static final String UPDATE_BUYER_BY_ID = "UPDATE buyers SET name=? where id = ?";
+    public static final String INVALID_ORDER_ID = "Invalid order id";
 
     private final JdbcTemplate jdbcTemplate;
     private final OrderRepositoryImpl orderRepository;
@@ -65,21 +66,15 @@ public class BuyerRepositoryImpl implements BuyerRepository {
         if (jdbcTemplate.update(INSERT_BUYER, buyer.getName()) == 1) {
             Buyer saveBuyer = jdbcTemplate.queryForObject(BUYER_BY_NAME,
                     new BeanPropertyRowMapper<>(Buyer.class), buyer.getName());
-
             List<Order> orders = buyer.getOrders();
-            List<Order> saveOrders = new ArrayList<>();
             for (Order order : orders) {
-                if (orderRepository.get(order.getId()) == null) {
-                    Order saveOrder = orderRepository.save(order);
-                    jdbcTemplate.update(INSERT_BUYER_ORDERS, saveBuyer.getId(), saveOrder.getId());
-                    saveOrders.add(saveOrder);
-                } else {
-                    orderRepository.update(order);
+                if (orderRepository.get(order.getId()) != null) {
                     jdbcTemplate.update(INSERT_BUYER_ORDERS, saveBuyer.getId(), order.getId());
-                    saveOrders.add(order);
+                } else {
+                    throw new IllegalArgumentException(INVALID_ORDER_ID);
                 }
             }
-            saveBuyer.setOrders(saveOrders);
+            saveBuyer.setOrders(orders);
             return saveBuyer;
         } else {
             throw new IllegalArgumentException(ItemRepositoryImpl.SQL_QUERY_FAILED);

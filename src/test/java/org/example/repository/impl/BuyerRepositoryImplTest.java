@@ -1,6 +1,7 @@
 package org.example.repository.impl;
 
 import org.example.models.Buyer;
+import org.example.models.Order;
 import org.example.repository.TestConfig;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,35 +14,28 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.example.controlers.BuyerControllerTest.buyerList;
 import static org.example.controlers.BuyerControllerTest.getTemplateBuyer;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {TestConfig.class})
 @WebAppConfiguration
 class BuyerRepositoryImplTest extends BaseTest {
     private final BuyerRepositoryImpl buyerRepository;
+    private final OrderRepositoryImpl orderRepository;
 
     @Autowired
-    public BuyerRepositoryImplTest(BuyerRepositoryImpl buyerRepository, JdbcTemplate jdbcTemplate) {
+    public BuyerRepositoryImplTest(BuyerRepositoryImpl buyerRepository, OrderRepositoryImpl orderRepository,
+                                   JdbcTemplate jdbcTemplate) {
         super(jdbcTemplate);
         this.buyerRepository = buyerRepository;
-    }
-
-    @Test
-    void shouldGetCustomers() {
-        Buyer buyer = getTemplateBuyer(1);
-        List<Buyer> buyers = buyerRepository.getAll();
-        assertEquals(0, buyers.size());
-        buyerRepository.save(buyer);
-        buyers = buyerRepository.getAll();
-        assertEquals(1, buyers.size());
+        this.orderRepository = orderRepository;
     }
 
     @Test
     void get() {
-        Buyer saveBuyer = buyerRepository.save(getTemplateBuyer(1));
+        Buyer saveBuyer = saveBuyer(getTemplateBuyer(1));
         Buyer getBuyer = buyerRepository.get(saveBuyer.getId());
         assertEquals(getBuyer, getTemplateBuyer(1));
     }
@@ -49,26 +43,25 @@ class BuyerRepositoryImplTest extends BaseTest {
     @Test
     void getAll() {
         int size = 5;
-        List<Buyer> buyers = buyerList(size);
-        List<Buyer> saveBuyers = new ArrayList<>();
-        for (Buyer buyer : buyers) {
-            Buyer saveBuyer = buyerRepository.save(buyer);
-            saveBuyers.add(saveBuyer);
+        List<Buyer> buyers = new ArrayList<>();
+        for (int i = 1; i <= size; i++) {
+            Buyer buyer = saveBuyer(getTemplateBuyer(i));
+            buyers.add(buyer);
         }
         List<Buyer> getAllBuyers = buyerRepository.getAll();
-        assertTrue(getAllBuyers.equals(buyers));
+        assertEquals(buyers, getAllBuyers);
     }
 
     @Test
     void save() {
-        Buyer saveBuyer = buyerRepository.save(getTemplateBuyer(1));
+        Buyer saveBuyer = saveBuyer(getTemplateBuyer(1));
         Buyer getBuyer = buyerRepository.get(saveBuyer.getId());
         assertEquals(getBuyer, getTemplateBuyer(1));
     }
 
     @Test
     void update() {
-        Buyer saveBuyer = buyerRepository.save(getTemplateBuyer(1));
+        Buyer saveBuyer = saveBuyer(getTemplateBuyer(1));
         saveBuyer.setName("NewName");
         buyerRepository.update(saveBuyer);
         Buyer getUpdateBuyer = buyerRepository.get(saveBuyer.getId());
@@ -77,9 +70,17 @@ class BuyerRepositoryImplTest extends BaseTest {
 
     @Test
     void delete() {
-        Buyer saveBuyer = buyerRepository.save(getTemplateBuyer(1));
+        Buyer saveBuyer = saveBuyer(getTemplateBuyer(1));
         assertEquals(buyerRepository.get(saveBuyer.getId()), saveBuyer);
         buyerRepository.delete(saveBuyer.getId());
         assertNull(buyerRepository.get(saveBuyer.getId()));
+    }
+
+    private Buyer saveBuyer(Buyer buyer) {
+        List<Order> orders = buyer.getOrders();
+        for (Order order : orders) {
+            orderRepository.save(order);
+        }
+        return buyerRepository.save(buyer);
     }
 }

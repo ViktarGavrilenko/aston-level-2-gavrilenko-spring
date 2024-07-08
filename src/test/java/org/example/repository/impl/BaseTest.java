@@ -4,8 +4,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import static org.springframework.test.context.transaction.TestTransaction.start;
-
 public class BaseTest {
     private final JdbcTemplate jdbcTemplate;
     public static final String DELETE_ALL_BUYER = "DELETE FROM buyers WHERE 1;";

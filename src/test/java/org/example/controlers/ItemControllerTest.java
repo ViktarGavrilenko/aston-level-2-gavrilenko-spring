@@ -35,12 +35,10 @@ public class ItemControllerTest {
 
     public static Item getTemplateItem(int id) {
         List<Order> orders = new ArrayList<>();
-        Order order = new Order(id, id, new ArrayList<>());
-        orders.add(order);
         return new Item(id, "Name" + id, id, orders);
     }
 
-    public static List<Item> itemList(int size) {
+    public static List<Item> getItemList(int size) {
         List<Item> itemList = new ArrayList<>();
         for (int i = 0; i < size; i++) {
             itemList.add(getTemplateItem(i));
@@ -51,7 +49,7 @@ public class ItemControllerTest {
     public static List<ItemDTO> itemDTOList(int size) {
         List<ItemDTO> itemDTOS = new ArrayList<>();
         for (int i = 0; i < size; i++) {
-            itemDTOS.add(new ItemDTO(i, "Name" + i, i, List.of(i)));
+            itemDTOS.add(new ItemDTO(i, "Name" + i, i, new ArrayList<>()));
         }
         return itemDTOS;
     }
@@ -72,7 +70,7 @@ public class ItemControllerTest {
     void getAll() {
         int size = 3;
         List<ItemDTO> itemDTOS = itemDTOList(size);
-        when(itemService.getAll()).thenReturn(itemList(size));
+        when(itemService.getAll()).thenReturn(getItemList(size));
 
         doAnswer(invocation -> {
             Item item = invocation.getArgument(0);
