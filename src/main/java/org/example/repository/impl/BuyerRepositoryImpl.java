@@ -37,6 +37,7 @@ public class BuyerRepositoryImpl implements BuyerRepository {
     public static final String UPDATE_BUYER_BY_ID = "UPDATE buyers SET name=? where id = ?";
     public static final String INVALID_ORDER_ID = "Invalid order id";
     public static final String INVALID_ID = "Invalid id";
+    public static final String SQL_QUERY_FAILED = "Sql query failed...";
 
     private final JdbcTemplate jdbcTemplate;
     private final OrderRepositoryImpl orderRepository;
@@ -78,7 +79,7 @@ public class BuyerRepositoryImpl implements BuyerRepository {
             saveBuyer.setOrders(orders);
             return saveBuyer;
         } else {
-            throw new IllegalArgumentException(ItemRepositoryImpl.SQL_QUERY_FAILED);
+            throw new IllegalArgumentException(SQL_QUERY_FAILED);
         }
     }
 

@@ -2,6 +2,7 @@ package org.example.repository.impl;
 
 import org.example.models.Item;
 import org.example.models.Order;
+import org.example.repository.ItemRepository;
 import org.example.repository.OrderRepository;
 import org.example.repository.mapper.OrderResultMapperWithOutItems;
 import org.example.repository.mapper.OrderResultSetMapper;
@@ -15,6 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static org.example.repository.impl.BuyerRepositoryImpl.INVALID_ORDER_ID;
+import static org.example.repository.impl.BuyerRepositoryImpl.SQL_QUERY_FAILED;
 
 @Repository
 public class OrderRepositoryImpl implements OrderRepository {
@@ -33,9 +37,9 @@ public class OrderRepositoryImpl implements OrderRepository {
     public static final String INVALID_ITEM_ID = "Invalid item id";
 
     private final JdbcTemplate jdbcTemplate;
-    private final ItemRepositoryImpl itemRepository;
+    private final ItemRepository itemRepository;
 
-    public OrderRepositoryImpl(JdbcTemplate jdbcTemplate, ItemRepositoryImpl itemRepository) {
+    public OrderRepositoryImpl(JdbcTemplate jdbcTemplate, ItemRepository itemRepository) {
         this.jdbcTemplate = jdbcTemplate;
         this.itemRepository = itemRepository;
     }
@@ -61,7 +65,7 @@ public class OrderRepositoryImpl implements OrderRepository {
             Order saveOrder = jdbcTemplate.queryForObject(ORDER_BY_NUMBER, new BeanPropertyRowMapper<>(Order.class), order.getNumber());
             List<Item> items = order.getItems();
             for (Item item : items) {
-                if (itemRepository.get(item.getId()) != null) {
+                if (itemRepository.findById(item.getId()).orElseThrow(() -> new IllegalArgumentException(INVALID_ORDER_ID)) != null) {
                     jdbcTemplate.update(INSERT_ORDER_ITEMS, saveOrder.getId(), item.getId());
                 } else {
                     throw new IllegalArgumentException(INVALID_ITEM_ID);
@@ -70,7 +74,7 @@ public class OrderRepositoryImpl implements OrderRepository {
             saveOrder.setItems(items);
             return saveOrder;
         } else {
-            throw new IllegalArgumentException(ItemRepositoryImpl.SQL_QUERY_FAILED);
+            throw new IllegalArgumentException(SQL_QUERY_FAILED);
         }
     }
 

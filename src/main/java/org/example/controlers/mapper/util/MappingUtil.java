@@ -2,7 +2,7 @@ package org.example.controlers.mapper.util;
 
 import org.example.models.Item;
 import org.example.models.Order;
-import org.example.repository.impl.ItemRepositoryImpl;
+import org.example.repository.ItemRepository;
 import org.example.repository.impl.OrderRepositoryImpl;
 import org.mapstruct.Named;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +18,10 @@ import static org.example.repository.impl.OrderRepositoryImpl.INVALID_ITEM_ID;
 @Component
 public class MappingUtil {
     private final OrderRepositoryImpl orderRepository;
-    private final ItemRepositoryImpl itemRepository;
+    private final ItemRepository itemRepository;
 
     @Autowired
-    public MappingUtil(OrderRepositoryImpl orderRepository, ItemRepositoryImpl itemRepository) {
+    public MappingUtil(OrderRepositoryImpl orderRepository, ItemRepository itemRepository) {
         this.orderRepository = orderRepository;
         this.itemRepository = itemRepository;
     }
@@ -58,7 +58,7 @@ public class MappingUtil {
         List<Item> items = new ArrayList<>();
         if (idItems != null) {
             for (int id : idItems) {
-                Item item = itemRepository.get(id);
+                Item item = itemRepository.findById(id).orElseThrow(() -> new IllegalArgumentException(INVALID_ORDER_ID));
                 if (item != null) {
                     items.add(item);
                 } else {

@@ -1,12 +1,22 @@
 package org.example.models;
 
+import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
 
+@Entity
+@Table(name = "item")
 public class Item {
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "item_id_seq")
+    @SequenceGenerator(name = "item_id_seq", allocationSize = 1)
     private int id;
+    @Column(name = "name")
     private String name;
+    @Column(name = "price")
     private int price;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id")
     private List<Order> orders;
 
     public Item() {
