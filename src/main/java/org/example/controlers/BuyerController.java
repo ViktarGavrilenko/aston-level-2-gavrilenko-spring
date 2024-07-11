@@ -16,7 +16,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/buyer")
-
 public class BuyerController {
     private final BuyerServiceImpl buyerService;
     private final BuyerDtoMapper dtoMapper;

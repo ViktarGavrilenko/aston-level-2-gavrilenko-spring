@@ -1,3 +1,4 @@
+/*
 package org.example.repository.impl;
 
 import org.example.models.Item;
@@ -23,7 +24,9 @@ import static org.example.repository.impl.BuyerRepositoryImpl.SELECT_ID_ITEMS_OF
 import static org.example.repository.impl.OrderRepositoryImpl.INSERT_ORDER_ITEMS;
 
 @Repository
-public class ItemRepositoryImpl /*implements ItemRepository*/ {
+public class ItemRepositoryImpl */
+/*implements ItemRepository*//*
+ {
     public static final String SQL_QUERY_FAILED = "Sql query failed...";
 
     public static final String ITEM_BY_ID = "SELECT id, name, price FROM items where id=?";
@@ -44,6 +47,7 @@ public class ItemRepositoryImpl /*implements ItemRepository*/ {
         this.jdbcTemplate = jdbcTemplate;
         this.orderRepository = orderRepository;
     }
+*/
 /*
     @Override
     public Item get(Integer id) {
@@ -104,7 +108,8 @@ public class ItemRepositoryImpl /*implements ItemRepository*/ {
         jdbcTemplate.update(DELETE_ITEM_FROM_ORDER_ITEMS, id);
         jdbcTemplate.update(DELETE_ITEM_BY_ID, id);
     }
-*/
+*//*
+
 
     public List<Item> getListItemsInOrderById(int idOrder) {
         List<Integer> idItems = jdbcTemplate.query(SELECT_ID_ITEMS_OF_ORDER_BY_ID_ORDER,
@@ -117,3 +122,4 @@ public class ItemRepositoryImpl /*implements ItemRepository*/ {
         return items;
     }
 }
+*/

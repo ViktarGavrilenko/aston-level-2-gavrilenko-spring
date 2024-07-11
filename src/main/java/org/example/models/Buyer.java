@@ -1,6 +1,8 @@
 package org.example.models;
 
-import javax.persistence.*;
+
+import jakarta.persistence.*;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -8,8 +10,7 @@ import java.util.Objects;
 @Table(name = "buyer")
 public class Buyer {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "buyer_id_seq")
-    @SequenceGenerator(name = "buyer_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     @Column(name = "name")
     private String name;

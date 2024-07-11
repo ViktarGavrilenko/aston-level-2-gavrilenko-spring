@@ -3,7 +3,7 @@ package org.example.controlers.mapper.util;
 import org.example.models.Item;
 import org.example.models.Order;
 import org.example.repository.ItemRepository;
-import org.example.repository.impl.OrderRepositoryImpl;
+import org.example.repository.OrderRepository;
 import org.mapstruct.Named;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -11,17 +11,17 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.example.repository.impl.BuyerRepositoryImpl.INVALID_ORDER_ID;
-import static org.example.repository.impl.OrderRepositoryImpl.INVALID_ITEM_ID;
+import static org.example.services.impl.ItemServiceImpl.INVALID_ITEM_ID;
+import static org.example.services.impl.ItemServiceImpl.INVALID_ORDER_ID;
 
 @Named("MappingUtil")
 @Component
 public class MappingUtil {
-    private final OrderRepositoryImpl orderRepository;
+    private final OrderRepository orderRepository;
     private final ItemRepository itemRepository;
 
     @Autowired
-    public MappingUtil(OrderRepositoryImpl orderRepository, ItemRepository itemRepository) {
+    public MappingUtil(OrderRepository orderRepository, ItemRepository itemRepository) {
         this.orderRepository = orderRepository;
         this.itemRepository = itemRepository;
     }
@@ -42,7 +42,7 @@ public class MappingUtil {
         List<Order> orders = new ArrayList<>();
         if (idOrders != null) {
             for (int id : idOrders) {
-                Order order = orderRepository.get(id);
+                Order order = orderRepository.findById(id).orElseThrow(() -> new IllegalArgumentException(INVALID_ORDER_ID));
                 if (order != null) {
                     orders.add(order);
                 } else {

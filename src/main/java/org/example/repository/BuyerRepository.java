@@ -1,6 +1,7 @@
 package org.example.repository;
 
 import org.example.models.Buyer;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface BuyerRepository extends Repository<Buyer, Integer> {
+public interface BuyerRepository extends JpaRepository<Buyer, Integer> {
 }

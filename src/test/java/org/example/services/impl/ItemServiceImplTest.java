@@ -11,6 +11,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.example.controlers.ItemControllerTest.getItemList;
 import static org.example.controlers.ItemControllerTest.getTemplateItem;
@@ -32,7 +33,7 @@ class ItemServiceImplTest {
 
     @Test
     void get() {
-//        when(itemRepository.findById(Mockito.anyInt())).thenReturn(getTemplateItem(1));
+        when(itemRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(getTemplateItem(1)));
         Item getItem = itemService.get(1);
         Assertions.assertEquals(getItem, getTemplateItem(1));
     }
@@ -47,7 +48,7 @@ class ItemServiceImplTest {
     @Test
     void update() {
         itemService.update(getTemplateItem(1));
-//        Mockito.verify(itemRepository).update(getTemplateItem(1));
+        Mockito.verify(itemRepository).save(getTemplateItem(1));
     }
 
     @Test

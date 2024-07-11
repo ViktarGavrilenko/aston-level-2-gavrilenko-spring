@@ -1,3 +1,4 @@
+/*
 package org.example.repository.impl;
 
 
@@ -131,4 +132,4 @@ public class BuyerRepositoryImpl implements BuyerRepository {
         }
         jdbcTemplate.update(DELETE_ORDER_OF_BUYER_FROM_BUYER_ORDER, id);
     }
-}
+}*/

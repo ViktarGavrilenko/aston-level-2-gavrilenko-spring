@@ -2,6 +2,8 @@ package org.example.repository.impl;
 
 import org.example.models.Buyer;
 import org.example.models.Order;
+import org.example.repository.BuyerRepository;
+import org.example.repository.OrderRepository;
 import org.example.repository.TestConfig;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.example.controlers.BuyerControllerTest.getTemplateBuyer;
+import static org.example.services.impl.ItemServiceImpl.INVALID_ORDER_ID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -22,11 +25,11 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 @ContextConfiguration(classes = {TestConfig.class})
 @WebAppConfiguration
 class BuyerRepositoryImplTest extends BaseTest {
-    private final BuyerRepositoryImpl buyerRepository;
-    private final OrderRepositoryImpl orderRepository;
+    private final BuyerRepository buyerRepository;
+    private final OrderRepository orderRepository;
 
     @Autowired
-    public BuyerRepositoryImplTest(BuyerRepositoryImpl buyerRepository, OrderRepositoryImpl orderRepository,
+    public BuyerRepositoryImplTest(BuyerRepository buyerRepository, OrderRepository orderRepository,
                                    JdbcTemplate jdbcTemplate) {
         super(jdbcTemplate);
         this.buyerRepository = buyerRepository;
@@ -36,7 +39,7 @@ class BuyerRepositoryImplTest extends BaseTest {
     @Test
     void get() {
         Buyer saveBuyer = saveBuyer(getTemplateBuyer(1));
-        Buyer getBuyer = buyerRepository.get(saveBuyer.getId());
+        Buyer getBuyer = buyerRepository.findById(saveBuyer.getId()).orElseThrow(() -> new IllegalArgumentException(INVALID_ORDER_ID));
         assertEquals(getBuyer, getTemplateBuyer(1));
     }
 
@@ -48,14 +51,14 @@ class BuyerRepositoryImplTest extends BaseTest {
             Buyer buyer = saveBuyer(getTemplateBuyer(i));
             buyers.add(buyer);
         }
-        List<Buyer> getAllBuyers = buyerRepository.getAll();
+        List<Buyer> getAllBuyers = buyerRepository.findAll();
         assertEquals(buyers, getAllBuyers);
     }
 
     @Test
     void save() {
         Buyer saveBuyer = saveBuyer(getTemplateBuyer(1));
-        Buyer getBuyer = buyerRepository.get(saveBuyer.getId());
+        Buyer getBuyer = buyerRepository.findById(saveBuyer.getId()).orElseThrow(() -> new IllegalArgumentException(INVALID_ORDER_ID));
         assertEquals(getBuyer, getTemplateBuyer(1));
     }
 
@@ -63,17 +66,17 @@ class BuyerRepositoryImplTest extends BaseTest {
     void update() {
         Buyer saveBuyer = saveBuyer(getTemplateBuyer(1));
         saveBuyer.setName("NewName");
-        buyerRepository.update(saveBuyer);
-        Buyer getUpdateBuyer = buyerRepository.get(saveBuyer.getId());
+        buyerRepository.save(saveBuyer);
+        Buyer getUpdateBuyer = buyerRepository.findById(saveBuyer.getId()).orElseThrow(() -> new IllegalArgumentException(INVALID_ORDER_ID));
         assertEquals(getUpdateBuyer, saveBuyer);
     }
 
     @Test
     void delete() {
         Buyer saveBuyer = saveBuyer(getTemplateBuyer(1));
-        assertEquals(buyerRepository.get(saveBuyer.getId()), saveBuyer);
-        buyerRepository.delete(saveBuyer.getId());
-        assertNull(buyerRepository.get(saveBuyer.getId()));
+        assertEquals(buyerRepository.findById(saveBuyer.getId()).orElseThrow(() -> new IllegalArgumentException(INVALID_ORDER_ID)), saveBuyer);
+        buyerRepository.deleteById(saveBuyer.getId());
+        assertNull(buyerRepository.findById(saveBuyer.getId()).orElseThrow(() -> null));
     }
 
     private Buyer saveBuyer(Buyer buyer) {

@@ -24,6 +24,4 @@ public class MySQLContainerTest extends MySQLContainer<MySQLContainerTest> {
     public void destroy() {
         stop();
     }
-
-
 }

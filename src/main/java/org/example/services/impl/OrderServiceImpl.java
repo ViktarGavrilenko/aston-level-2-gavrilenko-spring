@@ -1,44 +1,49 @@
 package org.example.services.impl;
 
 import org.example.models.Order;
-import org.example.repository.impl.OrderRepositoryImpl;
+import org.example.repository.OrderRepository;
 import org.example.services.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static org.example.services.impl.ItemServiceImpl.INVALID_ORDER_ID;
+
 @Service
 public class OrderServiceImpl implements OrderService {
-    private OrderRepositoryImpl repository;
+    private OrderRepository orderRepository;
 
     @Autowired
-    public OrderServiceImpl(OrderRepositoryImpl repository) {
-        this.repository = repository;
+    public OrderServiceImpl(OrderRepository orderRepository) {
+        this.orderRepository = orderRepository;
     }
 
     @Override
     public List<Order> getAll() {
-        return repository.getAll();
+        return orderRepository.findAll();
     }
 
     @Override
     public Order get(int id) {
-        return repository.get(id);
+        return orderRepository.findById(id).orElseThrow(() -> new IllegalArgumentException(INVALID_ORDER_ID));
     }
 
     @Override
     public Order save(Order order) {
-        return repository.save(order);
+        return orderRepository.save(order);
     }
 
     @Override
     public void update(Order order) {
-        repository.update(order);
+        Order updateOrder = get(order.getId());
+        updateOrder.setNumber(order.getNumber());
+        updateOrder.setItems(order.getItems());
+        orderRepository.save(updateOrder);
     }
 
     @Override
     public void delete(int orderId) {
-        repository.delete(orderId);
+        orderRepository.deleteById(orderId);
     }
 }

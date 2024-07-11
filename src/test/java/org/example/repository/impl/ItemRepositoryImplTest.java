@@ -1,9 +1,9 @@
 package org.example.repository.impl;
 
-import org.example.models.Buyer;
 import org.example.models.Item;
 import org.example.models.Order;
 import org.example.repository.ItemRepository;
+import org.example.repository.OrderRepository;
 import org.example.repository.TestConfig;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,11 +16,10 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.example.controlers.BuyerControllerTest.getTemplateBuyer;
 import static org.example.controlers.ItemControllerTest.getItemList;
 import static org.example.controlers.ItemControllerTest.getTemplateItem;
 import static org.example.controlers.OrderControllerTest.getTemplateOrder;
-import static org.example.repository.impl.BuyerRepositoryImpl.INVALID_ORDER_ID;
+import static org.example.services.impl.ItemServiceImpl.INVALID_ORDER_ID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -29,10 +28,10 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 @WebAppConfiguration
 class ItemRepositoryImplTest extends BaseTest {
     private final ItemRepository itemRepository;
-    private final OrderRepositoryImpl orderRepository;
+    private final OrderRepository orderRepository;
 
     @Autowired
-    public ItemRepositoryImplTest(ItemRepository itemRepository, OrderRepositoryImpl orderRepository, JdbcTemplate jdbcTemplate) {
+    public ItemRepositoryImplTest(ItemRepository itemRepository, OrderRepository orderRepository, JdbcTemplate jdbcTemplate) {
         super(jdbcTemplate);
         this.itemRepository = itemRepository;
         this.orderRepository = orderRepository;
@@ -67,7 +66,7 @@ class ItemRepositoryImplTest extends BaseTest {
     void update() {
         Item saveItem = itemRepository.save(getTemplateItem(1));
         saveItem.setName("NewName");
-//        itemRepository.update(saveItem);
+        itemRepository.save(saveItem);
         Item getUpdateItem = itemRepository.findById(saveItem.getId()).orElseThrow(() -> new IllegalArgumentException(INVALID_ORDER_ID));
         assertEquals(getUpdateItem, saveItem);
     }
@@ -84,14 +83,14 @@ class ItemRepositoryImplTest extends BaseTest {
     void getListItemsInOrderById() {
         Order order = getTemplateOrder(1);
         List<Item> items = new ArrayList<>();
-        for (Item item: order.getItems()){
+        for (Item item : order.getItems()) {
             Item saveItem = itemRepository.save(item);
             items.add(saveItem);
         }
         order.setItems(items);
         Order saveOrder = orderRepository.save(order);
         List<Item> itemListActual = getTemplateOrder(1).getItems();
-//        List<Item> itemListExpected = itemRepository.getListItemsInOrderById(saveOrder.getId());
-//        assertEquals(itemListExpected, itemListActual);
-     }
+        List<Item> itemListExpected = itemRepository.findAllByOrder(saveOrder.getId());
+        assertEquals(itemListExpected, itemListActual);
+    }
 }

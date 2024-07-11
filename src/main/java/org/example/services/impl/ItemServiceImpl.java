@@ -8,11 +8,13 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static org.example.repository.impl.BuyerRepositoryImpl.INVALID_ORDER_ID;
-
 @Service
 public class ItemServiceImpl implements ItemService {
     private ItemRepository itemRepository;
+    public static final String INVALID_ID = "Invalid id";
+    public static final String INVALID_ORDER_ID = "Invalid order id";
+    public static final String SQL_QUERY_FAILED = "Sql query failed...";
+    public static final String INVALID_ITEM_ID = "Invalid item id";
 
     @Autowired
     public ItemServiceImpl(ItemRepository itemRepository) {
@@ -38,7 +40,9 @@ public class ItemServiceImpl implements ItemService {
     public void update(Item item) {
         Item updateItem = get(item.getId());
         updateItem.setName(item.getName());
-        itemRepository.save(item);
+        updateItem.setPrice(item.getPrice());
+        updateItem.setOrders(item.getOrders());
+        itemRepository.save(updateItem);
     }
 
     @Override

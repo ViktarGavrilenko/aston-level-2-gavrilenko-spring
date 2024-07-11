@@ -1,3 +1,4 @@
+/*
 package org.example.repository.impl;
 
 import org.example.models.Item;
@@ -17,8 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.example.repository.impl.BuyerRepositoryImpl.INVALID_ORDER_ID;
-import static org.example.repository.impl.BuyerRepositoryImpl.SQL_QUERY_FAILED;
+import static org.example.services.impl.ItemServiceImpl.INVALID_ORDER_ID;
+import static org.example.services.impl.ItemServiceImpl.SQL_QUERY_FAILED;
 
 @Repository
 public class OrderRepositoryImpl implements OrderRepository {
@@ -32,6 +33,7 @@ public class OrderRepositoryImpl implements OrderRepository {
     public static final String DELETE_ORDER = "DELETE FROM orders WHERE id = ? ";
     public static final String DELETE_ORDER_FROM_ORDER_ITEMS = "DELETE FROM order_items WHERE id_order = ?";
     public static final String DELETE_BUYER_ORDER_BY_ID_ORDER = "DELETE FROM buyer_order WHERE id_order = ?";
+    public static final String ORDERS_OF_BUYER = "SELECT id_order FROM buyer_order WHERE id_buyer=?;";
     public static final String SELECT_ID_ORDERS_OF_ORDER_BY_ID_ITEM =
             "SELECT id_order FROM order_items WHERE id_item=?;";
     public static final String INVALID_ITEM_ID = "Invalid item id";
@@ -105,7 +107,7 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     public List<Order> getListOfBuyerOrdersById(int idBuyer) {
-        List<Integer> idOrders = jdbcTemplate.query(BuyerRepositoryImpl.ORDERS_OF_BUYER, new SingleColumnRowMapper<>(Integer.class), idBuyer);
+        List<Integer> idOrders = jdbcTemplate.query(ORDERS_OF_BUYER, new SingleColumnRowMapper<>(Integer.class), idBuyer);
         List<Order> orders = new ArrayList<>();
         for (int idOrder : idOrders) {
             Order order = get(idOrder);
@@ -128,4 +130,4 @@ public class OrderRepositoryImpl implements OrderRepository {
         }
         return orders;
     }
-}
+}*/

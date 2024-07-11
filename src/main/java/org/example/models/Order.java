@@ -1,6 +1,7 @@
 package org.example.models;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -8,17 +9,20 @@ import java.util.Objects;
 @Table(name = "order")
 public class Order {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_id_seq")
-    @SequenceGenerator(name = "order_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     @Column(name = "number")
     private int number;
     @ManyToMany()
     @JoinTable(
             name = "order_items",
-            joinColumns = {@JoinColumn(name = "item_id")},
-            inverseJoinColumns = {@JoinColumn(name = "order_id")})
+            joinColumns = {@JoinColumn(name = "id_item")},
+            inverseJoinColumns = {@JoinColumn(name = "id_order")})
     private List<Item> items;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_buyer")
+    private Buyer buyer;
 
     public Order() {
     }
@@ -27,6 +31,14 @@ public class Order {
         this.id = id;
         this.number = number;
         this.items = items;
+    }
+
+    public Buyer getBuyer() {
+        return buyer;
+    }
+
+    public void setBuyers(Buyer buyer) {
+        this.buyer = buyer;
     }
 
     public int getId() {
