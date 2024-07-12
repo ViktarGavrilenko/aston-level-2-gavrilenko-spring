@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "buyer")
+@Table(name = "buyers")
 public class Buyer {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -15,6 +15,7 @@ public class Buyer {
     @Column(name = "name")
     private String name;
     @OneToMany(mappedBy = "buyer", cascade = CascadeType.ALL)
+    /*@JoinColumn(name="id_buyer")*/
     private List<Order> orders;
 
     public Buyer() {
