@@ -12,8 +12,10 @@ import org.mapstruct.MappingConstants;
 })
 public interface OrderDtoMapper {
     @Mapping(target = "items", qualifiedByName = {"MappingUtil", "getItemsById"}, source = "items")
+    @Mapping(target = "buyer", qualifiedByName = {"MappingUtil", "getBuyerById"}, source = "buyerId")
     Order orderDTOToOrder(OrderDTO orderDTO);
 
     @Mapping(target = "items", qualifiedByName = {"MappingUtil", "getIdItems"}, source = "items")
+    @Mapping(target = "buyerId", qualifiedByName = {"MappingUtil", "getIdBuyer"}, source = "buyer")
     OrderDTO orderToOrderDTO(Order order);
 }

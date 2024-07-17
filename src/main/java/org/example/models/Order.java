@@ -16,21 +16,26 @@ public class Order {
     @ManyToMany()
     @JoinTable(
             name = "order_items",
-            joinColumns = {@JoinColumn(name = "id_item")},
-            inverseJoinColumns = {@JoinColumn(name = "id_order")})
+            joinColumns = {@JoinColumn(name = "id_order")},
+            inverseJoinColumns = {@JoinColumn(name = "id_item")})
     private List<Item> items;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_buyer")
     private Buyer buyer;
 
     public Order() {
     }
 
-    public Order(int id, int number, List<Item> items) {
+    public Order(int id, int number, List<Item> items, Buyer buyer) {
         this.id = id;
         this.number = number;
         this.items = items;
+        this.buyer = buyer;
+    }
+
+    public void setBuyer(Buyer buyer) {
+        this.buyer = buyer;
     }
 
     public Buyer getBuyer() {

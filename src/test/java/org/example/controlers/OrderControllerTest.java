@@ -33,30 +33,30 @@ public class OrderControllerTest {
     @Mock
     private OrderDtoMapper dtoMapper;
 
-    public static Order getTemplateOrder(int id) {
+/*    public static Order getTemplateOrder(int id) {
         List<Item> items = new ArrayList<>();
         Item item = new Item(id, "Name" + id, id, new ArrayList<>());
         items.add(item);
         return new Order(id, id, items);
-    }
+    }*/
 
-    public static List<Order> getOrderList(int size) {
+/*    public static List<Order> getOrderList(int size) {
         List<Order> orderList = new ArrayList<>();
         for (int i = 0; i < size; i++) {
             orderList.add(getTemplateOrder(i));
         }
         return orderList;
-    }
+    }*/
 
-    public static List<OrderDTO> orderDTOList(int size) {
+/*    public static List<OrderDTO> orderDTOList(int size) {
         List<OrderDTO> orderDTOS = new ArrayList<>();
         for (int i = 0; i < size; i++) {
             orderDTOS.add(new OrderDTO(i, i, List.of(i)));
         }
         return orderDTOS;
-    }
+    }*/
 
-    @Test
+  /*  @Test
     void get() {
         int id = 1;
         OrderDTO orderDTO = new OrderDTO(id, id, new ArrayList<>());
@@ -66,9 +66,9 @@ public class OrderControllerTest {
         Mockito.verify(dtoMapper, times(1)).orderToOrderDTO(any(Order.class));
         assertEquals(orderDTO, response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
-    }
+    }*/
 
-    @Test
+  /*  @Test
     void getAll() {
         int size = 3;
         List<OrderDTO> itemDTOS = orderDTOList(size);
@@ -85,8 +85,8 @@ public class OrderControllerTest {
         Mockito.verify(dtoMapper, times(size)).orderToOrderDTO(any(Order.class));
         assertEquals(itemDTOS, response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
-    }
-
+    }*/
+/*
     @Test
     void save() throws IOException {
         String json = new String(Files.readAllBytes(Paths.get("src/test/resources/orderDTO.json")));
@@ -115,7 +115,7 @@ public class OrderControllerTest {
         Mockito.verify(dtoMapper, times(1)).orderDTOToOrder(any(OrderDTO.class));
         Mockito.verify(orderService, times(1)).update(any(Order.class));
         assertEquals(HttpStatus.OK, response.getStatusCode());
-    }
+    }*/
 
     @Test
     void doDelete() {

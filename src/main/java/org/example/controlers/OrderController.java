@@ -8,6 +8,7 @@ import org.example.models.Order;
 import org.example.services.impl.OrderServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,7 +28,7 @@ public class OrderController {
         this.dtoMapper = dtoMapper;
     }
 
-    @GetMapping(value = "/{id}", produces = "application/json")
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<OrderDTO> get(@PathVariable("id") int id) {
         Order order = orderService.get(id);
         OrderDTO orderDTO = null;
@@ -37,7 +38,7 @@ public class OrderController {
         return new ResponseEntity<>(orderDTO, HttpStatus.OK);
     }
 
-    @GetMapping(produces = "application/json")
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<OrderDTO>> getAll() {
         List<Order> orders = orderService.getAll();
         List<OrderDTO> orderDTOS = new ArrayList<>();
@@ -47,7 +48,7 @@ public class OrderController {
         return new ResponseEntity<>(orderDTOS, HttpStatus.OK);
     }
 
-    @PostMapping(consumes = "application/json")
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> save(@RequestBody String json) throws JsonProcessingException {
         OrderDTO orderDTO = mapper.readValue(json, OrderDTO.class);
         Order order = dtoMapper.orderDTOToOrder(orderDTO);
@@ -55,7 +56,7 @@ public class OrderController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PutMapping(consumes = "application/json")
+    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> doPut(@RequestBody String json) throws JsonProcessingException {
         OrderDTO orderDTO = mapper.readValue(json, OrderDTO.class);
         Order order = dtoMapper.orderDTOToOrder(orderDTO);

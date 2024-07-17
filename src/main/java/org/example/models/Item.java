@@ -15,11 +15,7 @@ public class Item {
     private String name;
     @Column(name = "price")
     private int price;
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "order_items",
-            joinColumns = {@JoinColumn(name = "id_order")},
-            inverseJoinColumns = {@JoinColumn(name = "id_item")})
+    @ManyToMany(mappedBy = "items", fetch = FetchType.EAGER)
     private List<Order> orders;
 
     public Item() {

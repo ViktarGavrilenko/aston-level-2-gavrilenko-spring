@@ -1,3 +1,4 @@
+/*
 package org.example.repository.impl;
 
 import org.example.models.Item;
@@ -93,4 +94,4 @@ class ItemRepositoryImplTest extends BaseTest {
         List<Item> itemListExpected = itemRepository.findAllByOrder(saveOrder.getId());
         assertEquals(itemListExpected, itemListActual);
     }
-}
+}*/

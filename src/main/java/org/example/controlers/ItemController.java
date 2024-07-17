@@ -8,6 +8,7 @@ import org.example.models.Item;
 import org.example.services.impl.ItemServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,7 +28,7 @@ public class ItemController {
         this.dtoMapper = dtoMapper;
     }
 
-    @GetMapping(value = "/{id}", produces = "application/json")
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ItemDTO> get(@PathVariable("id") int id) {
         Item item = itemService.get(id);
         ItemDTO itemDTO = null;
@@ -37,7 +38,7 @@ public class ItemController {
         return new ResponseEntity<>(itemDTO, HttpStatus.OK);
     }
 
-    @GetMapping(produces = "application/json")
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<ItemDTO>> getAll() {
         List<Item> items = itemService.getAll();
         List<ItemDTO> itemDTOS = new ArrayList<>();
@@ -47,7 +48,7 @@ public class ItemController {
         return new ResponseEntity<>(itemDTOS, HttpStatus.OK);
     }
 
-    @PostMapping(consumes = "application/json")
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> save(@RequestBody String json) throws JsonProcessingException {
         ItemDTO itemDTO = mapper.readValue(json, ItemDTO.class);
         Item item = dtoMapper.itemDTOToItem(itemDTO);
@@ -55,7 +56,7 @@ public class ItemController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PutMapping(consumes = "application/json")
+    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> doPut(@RequestBody String json) throws JsonProcessingException {
         ItemDTO itemDTO = mapper.readValue(json, ItemDTO.class);
         Item item = dtoMapper.itemDTOToItem(itemDTO);

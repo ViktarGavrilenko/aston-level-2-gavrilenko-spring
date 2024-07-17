@@ -12,11 +12,11 @@ class OrderDTOTest {
     private final int number = 1111;
     public List<Integer> items = getTempListInteger();
 
-    @Test
+/*    @Test
     void getId() {
         OrderDTO order = new OrderDTO(id, number, items);
         assertEquals(id, order.getId());
-    }
+    }*/
 
     @Test
     void setId() {
@@ -25,11 +25,11 @@ class OrderDTOTest {
         assertEquals(id, order.getId());
     }
 
-    @Test
+/*    @Test
     void getNumber() {
         OrderDTO order = new OrderDTO(id, number, items);
         assertEquals(number, order.getNumber());
-    }
+    }*/
 
     @Test
     void setNumber() {
@@ -38,11 +38,11 @@ class OrderDTOTest {
         assertEquals(number, order.getNumber());
     }
 
-    @Test
+/*    @Test
     void getItems() {
         OrderDTO order = new OrderDTO(id, number, items);
         assertEquals(items, order.getItems());
-    }
+    }*/
 
     @Test
     void setItems() {

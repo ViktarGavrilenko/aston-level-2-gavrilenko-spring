@@ -15,6 +15,7 @@ public class ItemServiceImpl implements ItemService {
     public static final String INVALID_ORDER_ID = "Invalid order id";
     public static final String SQL_QUERY_FAILED = "Sql query failed...";
     public static final String INVALID_ITEM_ID = "Invalid item id";
+    public static final String INVALID_BUYER_ID = "Invalid buyer id";
 
     @Autowired
     public ItemServiceImpl(ItemRepository itemRepository) {

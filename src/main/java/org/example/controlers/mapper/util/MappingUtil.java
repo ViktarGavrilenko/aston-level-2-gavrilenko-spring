@@ -1,7 +1,9 @@
 package org.example.controlers.mapper.util;
 
+import org.example.models.Buyer;
 import org.example.models.Item;
 import org.example.models.Order;
+import org.example.repository.BuyerRepository;
 import org.example.repository.ItemRepository;
 import org.example.repository.OrderRepository;
 import org.mapstruct.Named;
@@ -11,19 +13,20 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.example.services.impl.ItemServiceImpl.INVALID_ITEM_ID;
-import static org.example.services.impl.ItemServiceImpl.INVALID_ORDER_ID;
+import static org.example.services.impl.ItemServiceImpl.*;
 
 @Named("MappingUtil")
 @Component
 public class MappingUtil {
     private final OrderRepository orderRepository;
     private final ItemRepository itemRepository;
+    private final BuyerRepository buyerRepository;
 
     @Autowired
-    public MappingUtil(OrderRepository orderRepository, ItemRepository itemRepository) {
+    public MappingUtil(OrderRepository orderRepository, ItemRepository itemRepository, BuyerRepository buyerRepository) {
         this.orderRepository = orderRepository;
         this.itemRepository = itemRepository;
+        this.buyerRepository = buyerRepository;
     }
 
     @Named("getIdOrders")
@@ -78,5 +81,22 @@ public class MappingUtil {
             }
         }
         return idItems;
+    }
+
+    @Named("getIdBuyer")
+    public Integer getIdBuyer(Buyer buyer) {
+        return buyer.getId();
+    }
+
+    @Named("getBuyerById")
+    public Buyer getBuyerById(Integer idBuyer) {
+        Buyer buyer = new Buyer();
+        if (idBuyer != null) {
+            buyer = buyerRepository.findById(idBuyer).orElseThrow(() -> new IllegalArgumentException(INVALID_BUYER_ID));
+            if (buyer == null) {
+                throw new IllegalArgumentException(INVALID_BUYER_ID);
+            }
+        }
+        return buyer;
     }
 }

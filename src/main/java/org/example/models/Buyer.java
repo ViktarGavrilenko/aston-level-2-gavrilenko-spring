@@ -14,8 +14,7 @@ public class Buyer {
     private int id;
     @Column(name = "name")
     private String name;
-    @OneToMany(mappedBy = "buyer", cascade = CascadeType.ALL)
-    /*@JoinColumn(name="id_buyer")*/
+    @OneToMany(mappedBy = "buyer", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Order> orders;
 
     public Buyer() {

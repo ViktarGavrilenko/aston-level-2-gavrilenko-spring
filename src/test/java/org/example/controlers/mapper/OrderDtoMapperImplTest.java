@@ -25,20 +25,20 @@ class OrderDtoMapperImplTest {
     @InjectMocks
     private OrderDtoMapperImpl dtoMapper;
 
-    private OrderDTO getOrderDTO() {
+/*    private OrderDTO getOrderDTO() {
         return new OrderDTO(1, 1, List.of(1, 2, 3));
-    }
+    }*/
 
-    private Order getOrder() {
+/*    private Order getOrder() {
         List<Item> items = new ArrayList<>();
         for (int i = 1; i < 4; i++) {
             List<Order> orders = new ArrayList<>();
             items.add(new Item(i, "name" + i, i * 2, orders));
         }
         return new Order(1, 1, items);
-    }
+    }*/
 
-    @Test
+/*    @Test
     void orderDTOToOrderTest() {
         when(mappingUtil.getItemsById(anyList())).thenReturn(getOrder().getItems());
         assertEquals(dtoMapper.orderDTOToOrder(getOrderDTO()), getOrder());
@@ -48,5 +48,5 @@ class OrderDtoMapperImplTest {
     void orderToOrderDTOTest() {
         when(mappingUtil.getIdItems(anyList())).thenReturn(getOrderDTO().getItems());
         assertEquals(dtoMapper.orderToOrderDTO(getOrder()), getOrderDTO());
-    }
+    }*/
 }

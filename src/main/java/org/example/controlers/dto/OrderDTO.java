@@ -7,14 +7,24 @@ public class OrderDTO {
     private int id;
     private int number;
     private List<Integer> items;
+    private Integer buyerId;
 
     public OrderDTO() {
     }
 
-    public OrderDTO(int id, int number, List<Integer> items) {
+    public OrderDTO(int id, int number, List<Integer> items, Integer buyerId) {
         this.id = id;
         this.number = number;
         this.items = items;
+        this.buyerId = buyerId;
+    }
+
+    public Integer getBuyerId() {
+        return buyerId;
+    }
+
+    public void setBuyerId(Integer buyerId) {
+        this.buyerId = buyerId;
     }
 
     public int getId() {

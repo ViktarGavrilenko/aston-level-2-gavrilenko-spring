@@ -8,6 +8,7 @@ import org.example.models.Buyer;
 import org.example.services.impl.BuyerServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,7 +28,7 @@ public class BuyerController {
         this.dtoMapper = dtoMapper;
     }
 
-    @GetMapping(value = "/{id}", produces = "application/json")
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<BuyerDTO> get(@PathVariable("id") int id) {
         Buyer buyer = buyerService.get(id);
         BuyerDTO buyerDTO = null;
@@ -37,7 +38,7 @@ public class BuyerController {
         return new ResponseEntity<>(buyerDTO, HttpStatus.OK);
     }
 
-    @GetMapping(produces = "application/json")
+    @GetMapping(consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<BuyerDTO>> getAll() {
         List<Buyer> buyers = buyerService.getAll();
         List<BuyerDTO> buyerDTOS = new ArrayList<>();
@@ -47,7 +48,7 @@ public class BuyerController {
         return new ResponseEntity<>(buyerDTOS, HttpStatus.OK);
     }
 
-    @PostMapping(consumes = "application/json")
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> save(@RequestBody String json) throws JsonProcessingException {
         BuyerDTO buyerDTO = mapper.readValue(json, BuyerDTO.class);
         Buyer buyer = dtoMapper.buyerDTOToBuyer(buyerDTO);
@@ -55,7 +56,7 @@ public class BuyerController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PutMapping(consumes = "application/json")
+    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> doPut(@RequestBody String json) throws JsonProcessingException {
         BuyerDTO buyerDTO = mapper.readValue(json, BuyerDTO.class);
         Buyer buyer = dtoMapper.buyerDTOToBuyer(buyerDTO);

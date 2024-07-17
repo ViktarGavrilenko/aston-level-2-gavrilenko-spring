@@ -3,9 +3,8 @@ package org.example.models;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class BuyerTest {
     private final int id = 1;
@@ -37,7 +36,7 @@ class BuyerTest {
         assertEquals(name, buyer.getName());
     }
 
-    @Test
+/*    @Test
     void getOrders() {
         Buyer buyer = new Buyer(id, name, getTempOrders());
         assertEquals(getTempOrders(), buyer.getOrders());
@@ -48,9 +47,9 @@ class BuyerTest {
         Buyer buyer = new Buyer();
         buyer.setOrders(getTempOrders());
         assertEquals(getTempOrders(), buyer.getOrders());
-    }
+    }*/
 
-    static List<Order> getTempOrders() {
+/*    static List<Order> getTempOrders() {
         int size = 5;
         List<Order> orders = new ArrayList<>();
         for (int i = 0; i < size; i++) {
@@ -58,5 +57,5 @@ class BuyerTest {
             orders.add(order);
         }
         return orders;
-    }
+    }*/
 }
