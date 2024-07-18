@@ -1,8 +1,11 @@
 package org.example.controlers.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import java.util.List;
 import java.util.Objects;
 
+@JsonSerialize
 public class BuyerDTO {
     private int id;
     private String name;

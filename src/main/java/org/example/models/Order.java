@@ -13,7 +13,7 @@ public class Order {
     private int id;
     @Column(name = "number")
     private int number;
-    @ManyToMany()
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "order_items",
             joinColumns = {@JoinColumn(name = "id_order")},
