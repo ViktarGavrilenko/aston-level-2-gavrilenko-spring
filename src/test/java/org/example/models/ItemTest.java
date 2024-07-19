@@ -1,4 +1,3 @@
-/*
 package org.example.models;
 
 import org.junit.jupiter.api.Test;
@@ -65,5 +64,4 @@ class ItemTest {
         item.setOrders(orders);
         assertEquals(orders, item.getOrders());
     }
-
-}*/
+}

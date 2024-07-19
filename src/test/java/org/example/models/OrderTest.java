@@ -10,13 +10,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class OrderTest {
     private final int id = 1;
     private final int number = 1111;
-    public List<Item> items = getTempItems();
+    private final List<Item> items = getTempItems();
+    private final Buyer buyer = new Buyer();
 
-/*    @Test
+    @Test
     void getId() {
-        Order order = new Order(id, number, items);
+        Order order = new Order(id, number, items, buyer);
         assertEquals(id, order.getId());
-    }*/
+    }
 
     @Test
     void setId() {
@@ -24,12 +25,12 @@ class OrderTest {
         order.setId(id);
         assertEquals(id, order.getId());
     }
-/*
+
     @Test
     void getNumber() {
-        Order order = new Order(id, number, items);
+        Order order = new Order(id, number, items, buyer);
         assertEquals(number, order.getNumber());
-    }*/
+    }
 
     @Test
     void setNumber() {
@@ -38,11 +39,11 @@ class OrderTest {
         assertEquals(number, order.getNumber());
     }
 
-/*    @Test
+    @Test
     void getItems() {
-        Order order = new Order(id, number, items);
+        Order order = new Order(id, number, items, buyer);
         assertEquals(items, order.getItems());
-    }*/
+    }
 
     @Test
     void setItems() {

@@ -33,20 +33,20 @@ public class BuyerControllerTest {
     @Mock
     private BuyerDtoMapper dtoMapper;
 
-/*    public static Buyer getTemplateBuyer(int id) {
+    public static Buyer getTemplateBuyer(int id) {
         List<Order> orders = new ArrayList<>();
-        Order order = new Order(id, id, new ArrayList<>());
+        Order order = new Order(id, id, new ArrayList<>(), new Buyer(id, "Name" + id, new ArrayList<>()));
         orders.add(order);
         return new Buyer(id, "Name" + id, orders);
-    }*/
+    }
 
-/*    public static List<Buyer> buyerList(int size) {
+    public static List<Buyer> buyerList(int size) {
         List<Buyer> buyerList = new ArrayList<>();
         for (int i = 1; i <= size; i++) {
             buyerList.add(getTemplateBuyer(i));
         }
         return buyerList;
-    }*/
+    }
 
     public static List<BuyerDTO> buyerDTOList(int size) {
         List<BuyerDTO> buyerList = new ArrayList<>();
@@ -56,7 +56,7 @@ public class BuyerControllerTest {
         return buyerList;
     }
 
-/*    @Test
+    @Test
     void get() {
         int id = 1;
         BuyerDTO buyerDTO = new BuyerDTO(id, getTemplateBuyer(id).getName(), new ArrayList<>());
@@ -66,9 +66,9 @@ public class BuyerControllerTest {
         Mockito.verify(dtoMapper, times(1)).buyerToBuyerDTO(any(Buyer.class));
         assertEquals(buyerDTO, response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
-    }*/
+    }
 
- /*   @Test
+    @Test
     void getAll() {
         int size = 3;
         List<BuyerDTO> buyerDTOS = buyerDTOList(size);
@@ -85,15 +85,15 @@ public class BuyerControllerTest {
         Mockito.verify(dtoMapper, times(size)).buyerToBuyerDTO(any(Buyer.class));
         assertEquals(buyerDTOS, response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
-    }*/
+    }
 
- /*   @Test
+    @Test
     void save() throws IOException {
         String json = new String(Files.readAllBytes(Paths.get("src/test/resources/buyerDTO.json")));
         doAnswer(invocation -> {
             BuyerDTO buyerDTO = invocation.getArgument(0);
             return new Buyer(buyerDTO.getId(), buyerDTO.getName(), buyerDTO.getOrders().stream()
-                    .map(i -> new Order(i, i, new ArrayList<>()))
+                    .map(i -> new Order(i, i, new ArrayList<>(), new Buyer()))
                     .toList());
         }).when(dtoMapper).buyerDTOToBuyer(any(BuyerDTO.class));
         ResponseEntity<?> response = buyerController.save(json);
@@ -108,14 +108,14 @@ public class BuyerControllerTest {
         doAnswer(invocation -> {
             BuyerDTO buyerDTO = invocation.getArgument(0);
             return new Buyer(buyerDTO.getId(), buyerDTO.getName(), buyerDTO.getOrders().stream()
-                    .map(i -> new Order(i, i, new ArrayList<>()))
+                    .map(i -> new Order(i, i, new ArrayList<>(), new Buyer()))
                     .toList());
         }).when(dtoMapper).buyerDTOToBuyer(any(BuyerDTO.class));
         ResponseEntity<?> response = buyerController.doPut(json);
         Mockito.verify(dtoMapper, times(1)).buyerDTOToBuyer(any(BuyerDTO.class));
         Mockito.verify(buyerService, times(1)).update(any(Buyer.class));
         assertEquals(HttpStatus.OK, response.getStatusCode());
-    }*/
+    }
 
     @Test
     void doDelete() {

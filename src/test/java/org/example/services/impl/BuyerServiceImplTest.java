@@ -1,4 +1,3 @@
-/*
 package org.example.services.impl;
 
 import org.example.models.Buyer;
@@ -57,4 +56,4 @@ class BuyerServiceImplTest {
         buyerService.delete(1);
         Mockito.verify(buyerRepository).deleteById(1);
     }
-}*/
+}
